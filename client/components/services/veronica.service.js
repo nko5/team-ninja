@@ -1,11 +1,13 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .service('VeronicaService', function () {
+    .service('Veronica', function () {
         var self = this;
         var veronica = new SpeechSynthesisUtterance("");
         var voiceArr = speechSynthesis.getVoices();
-        veronica.voice = voiceArr[2];
+        veronica.lang = 'en-US';
+
+        console.log(veronica.voice);
 
 
         var _splitMessage = function (message) {
@@ -26,11 +28,21 @@ angular.module('teamNinjaApp')
 
         };
 
-        self.say = function (message) {
+        self.say = function (message, delayedMessage) {
             var chunks = _splitMessage(message) || [];
             chunks.forEach(function (message) {
                 veronica.text = message;
+                veronica.onend = function () {
+                    if(delayedMessage.length){
+                        var item = delayedMessage.pop();
+                        setTimeout(function(){
+                            veronica.text = item.message;
+                            window.speechSynthesis.speak(veronica);
+                        }, item.delay)
+                    }
+                };
                 window.speechSynthesis.speak(veronica);
+
             });
         };
 

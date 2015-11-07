@@ -12,14 +12,13 @@ var UserSchema = new Schema({
     type: String,
     default: 'user'
   },
-  picture: String,
   hashedPassword: String,
   provider: String,
   salt: String,
   facebook: {},
   twitter: {},
   google: {},
-  profile_image_icon : String
+  picture : String
 });
 
 /**

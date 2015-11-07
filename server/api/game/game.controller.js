@@ -41,7 +41,11 @@ exports.callNumber = function (req, res) {
                 if (!number) {
                     return res.status(404).send('Not Found');
                 }
-                return res.json(number);
+                return res.json({
+                    number: number.number,
+                    description: number.description,
+                    inWords: number.inWords("en").replace("-", "")
+                });
             });
 
         });
@@ -63,12 +67,14 @@ exports.show = function (req, res) {
 
 // Creates a new game in the DB.
 exports.create = function (req, res) {
-    Game.create(req.body, function (err, game) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.status(201).json(game);
-    });
+    req.body.dateCreated = +new Date();
+
+  new Game(req.body).save(function (err, game) {
+    if (err) {
+      return handleError(res, err);
+    }
+    return res.status(201).json(game);
+  });
 };
 
 // Updates an existing game in the DB.
@@ -114,3 +120,35 @@ exports.destroy = function (req, res) {
 function handleError(res, err) {
     return res.status(500).send(err);
 }
+
+// Add player to a game
+exports.addPlayer = function (req, res) {
+  var player = {
+    id : req.body._id,
+    name : req.body.name,
+    picture : req.body.picture
+  };
+  if (req.body.gameId) {
+    Game.findById(req.body.gameId, function (err, game) {
+      if (err) {
+        return handleError(res, err);
+      }
+      else{
+        Game.update(
+          { _id: req.body.gameId },
+          { $addToSet: {players: player } }, function(err,game){
+            if(err){
+              return res.json({
+                updated : false
+              });
+            }
+            else{
+              return res.json({
+                updated : true
+              });
+            }
+          });
+      }
+    });
+  }
+};

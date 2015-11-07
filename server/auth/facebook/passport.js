@@ -7,7 +7,7 @@ exports.setup = function (User, config) {
       clientID: config.facebook.clientID,
       clientSecret: config.facebook.clientSecret,
       callbackURL: config.facebook.callbackURL,
-      profileFields: ['email']
+        profileFields: ['id', 'emails', 'displayName']
     },
     function (accessToken, refreshToken, profile, done) {
       request({
@@ -28,7 +28,7 @@ exports.setup = function (User, config) {
           }
         };
         if (!error && response.statusCode == 200) {
-          userObj.profile_image_icon = JSON.parse(body).data.url;
+          userObj.picture = JSON.parse(body).data.url;
         }
 
         User.findOne({

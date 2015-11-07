@@ -11,7 +11,7 @@ var getUserObj = function (user) {
         'name': user.name,
         'picture': user.picture
     };
-}
+};
 
 var createGame = function (users, rules) {
     Game.create({

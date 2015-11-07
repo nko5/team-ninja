@@ -17,6 +17,12 @@ angular.module('teamNinjaApp')
         params: {
           id:'me'
         }
+      },
+      invitePlayer : {
+        method : 'POST',
+        params: {
+          id:'invite'
+        }
       }
 	  });
   });
