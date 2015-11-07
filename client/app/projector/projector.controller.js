@@ -10,7 +10,6 @@ angular.module('teamNinjaApp')
 
         GameApi.get({id: $stateParams.id}, function (data) {
             self.game = data;
-            startCalling();
         });
 
         var promise;
