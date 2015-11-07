@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .factory('SocketIO', function (socketFactory) {
+    .factory('SocketIO', function (socketFactory, AppConstants) {
 
         // socket.io now auto-configures its connection when we ommit a connection url
         var ioSocket = io('', {
@@ -15,13 +15,13 @@ angular.module('teamNinjaApp')
             ioSocket: ioSocket
         });
 
-        socket.forward("CHAT");
+        socket.forward(AppConstants.Events.CHAT);
 
         return {
             socket: socket,
 
-            send: function (evt, options) {
-                socket.emit(evt, options);
+            send: function (evt, data) {
+                socket.emit(evt, data);
             },
 
             /**

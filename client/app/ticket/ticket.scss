@@ -1,0 +1,58 @@
+body {
+  position: relative;
+}
+#ticket-header {
+  h1 {
+    margin: 0;
+    padding: 20px;
+  }
+}
+.ticket-footer {
+  position: absolute;
+  width: 100%;
+  display: block;
+  padding-bottom: 20px;
+  left: 0;
+  bottom: 0;
+  .claims-list {
+    position: relative;
+    & > a {
+      display: block;
+      width: 150px;
+      text-align: center;
+      padding: 5px 10px;
+    }
+    .bootstrap-dropdown {
+      padding: 5px;
+      border-radius: 5px;
+      bottom: 30px;
+      z-index: 101;
+      left: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      position: absolute;
+      width: 150px;
+      display: none;
+    }
+    &.open {
+      .bootstrap-dropdown {
+        display: block;
+      }
+    }
+    ul {
+      list-style: none;
+      li {
+        a {
+          display: block;
+          padding: 5px 10px;
+          text-decoration: none;
+          color: #333;
+          border-radius: 3px;
+          &:hover {
+            background-color: #07f;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}

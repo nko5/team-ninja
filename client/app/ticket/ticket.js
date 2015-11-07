@@ -6,6 +6,7 @@ angular.module('teamNinjaApp')
       .state('ticket', {
         url: '/ticket',
         templateUrl: 'app/ticket/ticket.html',
-        controller: 'TicketCtrl'
+        controller: 'TicketCtrl',
+        controllerAs: "ctrl"
       });
   });

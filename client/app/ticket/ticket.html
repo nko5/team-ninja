@@ -1,3 +1,35 @@
-<div class="col-md-12">
-This is the ticket view.
+<div>
+    <div id="ticket-header">
+        <div class="logo">
+            <h1>Housie</h1>
+        </div>
+    </div>
+
+    <div class="ticket-container">
+
+    </div>
+
+    <div class="footer ticket-footer">
+        <div class="claim-area pull-left">
+            <div class="claims-list">
+                <a href="#" data-toggle="dropdown">Claim</a>
+                <ul class="bootstrap-dropdown">
+                    <li data-ng-repeat="rule in ctrl.game.rules" data-ng-click="ctrl.fireClaim(rule)">
+                        <a href="javascript:void(0)"> {{rule.name}} </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="chat-area pull-left">
+            <form data-ng-submit="ctrl.sendChat()">
+                <div class="chat-text pull-left">
+                    <input type="text" data-ng-model="ctrl.message"/>
+                </div>
+                <div class="send-btn pull-left">
+                    <button type="submit">send</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

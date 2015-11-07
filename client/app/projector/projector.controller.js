@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .controller('ProjectorCtrl', function (VeronicaService, GameApi, $interval) {
+    .controller('ProjectorCtrl', function (VeronicaService, GameApi, $interval, $scope, AppConstants, SocketIO) {
         VeronicaService.say("yipikaye ahem ahem!");
 
         var self = this;
@@ -33,5 +33,9 @@ angular.module('teamNinjaApp')
             }, function () {
 
             });
-        }
+        };
+
+        $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
+            console.log(data);
+        });
     });
