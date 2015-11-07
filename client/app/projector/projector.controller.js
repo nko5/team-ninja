@@ -1,25 +1,19 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .controller('ProjectorCtrl', function (VeronicaService, GameApi, $interval) {
-        VeronicaService.say("yipikaye ahem ahem!");
-
+    .controller('ProjectorCtrl', function (Veronica, GameApi, $interval) {
         var self = this;
+        self.number;
         GameApi.list(function(data){
             self.game = data.games[0];
-
-            GameApi.callNumber({id: self.game._id}, function(){
-
-            })
+            startCalling();
         });
-
-
 
         var promise;
 
         var startCalling = function () {
             if (!promise) {
-                promise = $interval(callNumber, 3000);
+                promise = $interval(callNumber, 7000);
             }
         };
 
@@ -28,10 +22,12 @@ angular.module('teamNinjaApp')
         };
 
         var callNumber = function () {
-            GameApi.get({}, function () {
-
-            }, function () {
-
+            GameApi.callNumber({id: self.game._id}, function(number){
+                self.number = number;
+                Veronica.say(number.description, [{
+                    delay: 1000,
+                    message: number.inWords
+                }]);
             });
         }
     });
