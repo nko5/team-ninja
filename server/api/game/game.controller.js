@@ -67,6 +67,7 @@ exports.show = function (req, res) {
 
 // Creates a new game in the DB.
 exports.create = function (req, res) {
+    req.body.dateCreated = +new Date();
     Game.create(req.body, function (err, game) {
         if (err) {
             return handleError(res, err);
