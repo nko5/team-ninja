@@ -7,7 +7,13 @@ angular.module('teamNinjaApp')
         var self = this;
         GameApi.list(function(data){
             self.game = data.games[0];
+
+            GameApi.callNumber({id: self.game._id}, function(){
+
+            })
         });
+
+
 
         var promise;
 

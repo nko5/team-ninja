@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Game = require('./game.model');
+var Number = require('../number/number.model');
 
 // Get list of games
 exports.index = function (req, res) {
@@ -30,10 +31,19 @@ exports.callNumber = function (req, res) {
                 numbers.push(number);
             }
         }
-        numbers.save(function (err, game) {
-            return res.json({
+        game.save(function (err, game) {
+            Number.findOne({
                 number: number
+            }, function (err, number) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                if (!number) {
+                    return res.status(404).send('Not Found');
+                }
+                return res.json(number);
             });
+
         });
     });
 };
