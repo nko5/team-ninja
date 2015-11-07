@@ -34,70 +34,7 @@ angular.module('teamNinjaApp')
             });
         };
 
-        SocketIO.socket.on("JOIN", function (data) {
-            self.game.players.push(data.user);
-        });
-
-        SocketIO.socket.on("LEAVE", function (data) {
-            var userToRemove;
-            self.game.players.forEach(function(user, index){
-                if(user._id == data.userId){
-                    userToRemove = index;
-                }
-            });
-            self.game.players.splice(userToRemove, 1);
-        });
-
-        SocketIO.socket.on("CLAIM", function (data) {
-            var userToUpdate;
-            self.game.players.forEach(function(user){
-                if(user._id == data.userId){
-                    userToUpdate = user;
-                }
-            });
-
-            userToUpdate.message = data.rule.name;
-
-            $timeout(function(){
-                if(data.rule.name == userToUpdate.message){
-                    userToUpdate.message = "";
-                }
-            }, 2000);
-        });
-
-        SocketIO.socket.on("CHAT", function (data) {
-            var userToUpdate;
-            self.game.players.forEach(function(user){
-                if(user._id == data.userId){
-                    userToUpdate = user;
-                }
-            });
-
-            if(userToUpdate) {
-                userToUpdate.message = data.message;
-
-                $timeout(function(){
-                    if(data.message == userToUpdate.message){
-                        userToUpdate.message = "";
-                    }
-                    userToUpdate.message = "";
-                }, 2000);
-            }
-
-        });
-
-        $scope.$on("$destroy", function () {
-            socket.removeAllListeners("JOIN");
-            socket.removeAllListeners("LEAVE");
-            socket.removeAllListeners("CLAIM");
-            socket.removeAllListeners("CHAT");
-        });
-
-        $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
-            console.log(data);
-        });
         $scope.sendInvite = function (user) {
-            console.log(user);
             if (user) {
                 User.invitePlayer({
                     sender: user.email,
@@ -117,4 +54,73 @@ angular.module('teamNinjaApp')
                 });
             }
         };
+
+        $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
+            console.log(data);
+            var userToUpdate;
+            for(var i = 0; i < self.game.players.length; i++) {
+                if(self.game.players[i].userId == data.userId) {
+                    userToUpdate = user;
+                    break;
+                }
+            }
+
+            if(userToUpdate) {
+                userToUpdate.message = data.message;
+                $timeout(function(){
+                    if(data.message == userToUpdate.message){
+                        userToUpdate.message = "";
+                    }
+                    userToUpdate.message = "";
+                }, 2000);
+            }
+        });
+
+        $scope.$on("socket:" + AppConstants.Events.CLAIM, function (evt, data) {
+            var userToUpdate;
+            for(var i = 0; i < self.game.players.length; i++) {
+                if(self.game.players[i].userId == data.userId) {
+                    userToUpdate = user;
+                    break;
+                }
+            }
+
+            if(userToUpdate) {
+                userToUpdate.message = data.rule.name;
+                $timeout(function(){
+                    if(data.rule.name == userToUpdate.message){
+                        userToUpdate.message = "";
+                    }
+                }, 2000);
+            }
+
+        });
+        $scope.$on("socket:" + AppConstants.Events.JOIN, function (evt, data) {
+            var isNewUser = true;
+            for(var i = 0; i < self.game.players.length; i++) {
+                if(self.game.players[i].userId == data.userId) {
+                    isNewUser = false;
+                    break;
+                }
+            }
+            if(isNewUser) {
+                self.game.players.push(data);
+            }
+        });
+        $scope.$on("socket:" + AppConstants.Events.LEAVE, function (evt, data) {
+            var userToRemove;
+            self.game.players.forEach(function(user, index){
+                if(user.userId == data.userId){
+                    userToRemove = index;
+                }
+            });
+            self.game.players.splice(userToRemove, 1);
+        });
+
+        $scope.$on("$destroy", function () {
+            socket.removeAllListeners("JOIN");
+            socket.removeAllListeners("LEAVE");
+            socket.removeAllListeners("CLAIM");
+            socket.removeAllListeners("CHAT");
+        });
     });
