@@ -10,14 +10,13 @@ angular.module('teamNinjaApp')
 
         GameApi.list(function(data){
             self.game = data.games[0];
-            startCalling();
         });
 
         var promise;
 
         var startCalling = function () {
             if (!promise) {
-                promise = $interval(callNumber, 1000);
+                promise = $interval(callNumber, 7000);
             }
         };
 
