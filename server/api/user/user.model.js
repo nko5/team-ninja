@@ -45,6 +45,17 @@ UserSchema
     };
   });
 
+// Public profile information
+UserSchema
+  .virtual('obj')
+  .get(function() {
+    return {
+      'id': this._id,
+      'name': this.name,
+      'picture': this.picture
+    };
+  });
+
 // Non-sensitive info we'll be putting in the token
 UserSchema
   .virtual('token')

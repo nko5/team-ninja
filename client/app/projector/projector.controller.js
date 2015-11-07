@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .controller('ProjectorCtrl', function (VeronicaService, NumberApi, $interval) {
-        VeronicaService.say("It's good to be alive, Oye kiddan!");
+    .controller('ProjectorCtrl', function (VeronicaService, GameApi, $interval) {
+        VeronicaService.say("Lone ranger, Buttered scone, Top of the house number 1, Son of a gun, At the beginning");
 
         var promise;
 
@@ -17,7 +17,7 @@ angular.module('teamNinjaApp')
         };
 
         var callNumber = function () {
-            NumberApi.get({}, function () {
+            GameApi.get({}, function () {
 
             }, function () {
 

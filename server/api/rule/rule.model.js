@@ -4,9 +4,18 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var RuleSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
+    name: String,
+    description: String,
+    identifier: String,
+    dateCreated: {
+        type: Number,
+        default: Date.now
+    },
+    lastUpdated: {
+        type: Number,
+        default: Date.now
+    },
+    active: Boolean
 });
 
 module.exports = mongoose.model('Rule', RuleSchema);

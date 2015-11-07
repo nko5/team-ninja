@@ -14,7 +14,7 @@ exports.index = function (req, res) {
 };
 
 // Get a single game
-exports.show = function (req, res) {
+exports.callNumber = function (req, res) {
     Game.findById(req.params.id, function (err, game) {
         if (err) {
             return handleError(res, err);
@@ -22,7 +22,19 @@ exports.show = function (req, res) {
         if (!game) {
             return res.status(404).send('Not Found');
         }
-        return res.json(game);
+        var number;
+        var numbers = game.calledNumbers;
+        if (numbers.length != 90) {
+            number = Math.floor(Math.random() * 100);
+            if (numbers.indexOf(number) < 0 && number <= 90) {
+                numbers.push(number);
+            }
+        }
+        numbers.save(function (err, game) {
+            return res.json({
+                number: number
+            });
+        });
     });
 };
 
