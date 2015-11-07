@@ -59,6 +59,7 @@ var createRules = function (cb) {
             arguments[6],
             arguments[7]
         ];
+        console.log(rules);
         cb(err, rules);
     });
 };
@@ -85,7 +86,7 @@ var createUsers = function (cb) {
         }
         console.log("User created");
         cb({
-            players: [getUserObj(manoj), getUserObj(sakshi)],
+            players: [getUserObj(nikhil),getUserObj(manoj), getUserObj(sakshi)],
             host: getUserObj(nikhil)
         })
     });
@@ -374,7 +375,7 @@ var createNumbers = function () {
 var startSeed = function () {
     createNumbers();
     createUsers(function (users) {
-        createRules(function (rules) {
+        createRules(function (err, rules) {
             createGame(users, rules)
         });
 
