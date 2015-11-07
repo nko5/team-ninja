@@ -1,5 +1,6 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-  .controller('MainCtrl', function ($scope, $http, socket) {
+  .controller('MainCtrl', function ($scope, $http, $state) {
+    $state.go('login');
   });
