@@ -6,6 +6,6 @@ angular.module('teamNinjaApp')
       .state('main.projector', {
         url: '/projector',
         templateUrl: 'app/projector/projector.html',
-        controller: 'ProjectorCtrl'
+        controller: 'ProjectorCtrl as projector'
       });
   });
