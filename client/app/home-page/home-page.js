@@ -6,6 +6,7 @@ angular.module('teamNinjaApp')
       .state('main.home', {
         url: '/',
         templateUrl: 'app/home-page/home-page.html',
-        controller: 'HomePageCtrl'
+        controller: 'HomePageCtrl',
+        controllerAs: "ctrl"
       });
   });
