@@ -12,7 +12,6 @@ angular.module('teamNinjaApp')
             var arr = message.split(" ");
             var chunks = [];
             var text = "";
-            console.log(arr);
             arr.forEach(function (word) {
                 if ((text.length + word.length) < 160) {
                     text += (word + " ");
@@ -31,7 +30,6 @@ angular.module('teamNinjaApp')
             var chunks = _splitMessage(message) || [];
             chunks.forEach(function (message) {
                 veronica.text = message;
-                console.log("about to say: " + message);
                 window.speechSynthesis.speak(veronica);
             });
         };
