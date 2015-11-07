@@ -9,8 +9,8 @@ module.exports = {
   DOMAIN:           'http://localhost:9000',
   SESSION_SECRET:   'teamninja-secret',
 
-  FACEBOOK_ID:      'app-id',
-  FACEBOOK_SECRET:  'secret',
+  FACEBOOK_ID:      '117282868634571',
+  FACEBOOK_SECRET:  '18418c02c290ee371411713a8e34c488',
 
   TWITTER_ID:       'GGOEToq5ih3VQDDojrqXw1OWU',
   TWITTER_SECRET:   'SYwOAUzij8mRJV2ggwSMvaSRaRl4d4MZnHtMF2dYcHIky3uHSF',
