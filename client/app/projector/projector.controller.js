@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .controller('ProjectorCtrl', function (Veronica, GameApi, $interval,$scope,User,Auth,$timeout) {
+    .controller('ProjectorCtrl', function (Veronica, GameApi, $interval,$scope,User,Auth,$timeout,$stateParams) {
         var self = this;
         self.number;
         $scope.showMessage = false;
 
         $scope.getCurrentUser = Auth.getCurrentUser;
 
-        GameApi.list(function(data){
-            self.game = data.games[0];
+        GameApi.get({id:$stateParams.id},function(data){
+            self.game = data;
             startCalling();
         });
 

@@ -123,7 +123,11 @@ function handleError(res, err) {
 
 // Add player to a game
 exports.addPlayer = function (req, res) {
-  console.log(">>>>>>>>>>>>", req.body);
+  var player = {
+    id : req.body._id,
+    name : req.body.name,
+    picture : req.body.picture
+  };
   if (req.body.gameId) {
     Game.findById(req.body.gameId, function (err, game) {
       if (err) {
@@ -132,8 +136,7 @@ exports.addPlayer = function (req, res) {
       else{
         Game.update(
           { _id: req.body.gameId },
-          { $addToSet: {players: req.body.user } }, function(err,game){
-            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&", err,game);
+          { $addToSet: {players: player } }, function(err,game){
             if(err){
               return res.json({
                 updated : false
