@@ -91,6 +91,7 @@ angular.module('teamNinjaApp')
             }
 
         });
+
         $scope.$on("socket:" + AppConstants.Events.JOIN, function (evt, data) {
             var isNewUser = true;
             for(var i = 0; i < self.game.players.length; i++) {
@@ -122,9 +123,6 @@ angular.module('teamNinjaApp')
             socket.removeAllListeners("CHAT");
         });
 
-        $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
-            console.log(data);
-        });
         $scope.sendInvite = function (user) {
             console.log(user);
             if (user) {
