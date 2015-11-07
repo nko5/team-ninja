@@ -4,9 +4,10 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var NumberSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
+    number: Number,
+    dateCreated: {type: Number, default: Date.now},
+    lastUpdated: {type: Number, default: Date.now},
+    description: String
 });
 
 module.exports = mongoose.model('Number', NumberSchema);
