@@ -8,7 +8,8 @@
           <label for="InputEmail">Invite friends</label>
           <input type="email" class="form-control" id="InputEmail"
                  placeholder="Email" ng-model="inviteEmail">
-          <button type="button" class="btn btn-warning" ng-click="sendInvite(getCurrentUser())">Send
+          <button type="button" class="btn btn-warning"
+                  ng-click="sendInvite(getCurrentUser())" ng-disabled="!inviteEmail">Send
             Invite</button>
         </div>
         <div class="alert alert-warning alert-dismissible fade in"
