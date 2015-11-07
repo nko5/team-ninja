@@ -20,7 +20,10 @@ exports.setup = function (User, config) {
             username: profile.username,
             role: 'user',
             provider: 'twitter',
-            twitter: profile._json
+            twitter: {
+              id_str: profile.id
+            },
+            profile_image_icon: profile._json.profile_image_url
           });
           user.save(function (err) {
             if (err) return done(err);

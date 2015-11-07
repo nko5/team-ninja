@@ -18,7 +18,7 @@ var UserSchema = new Schema({
   facebook: {},
   twitter: {},
   google: {},
-  github: {}
+  profile_image_icon : String
 });
 
 /**
