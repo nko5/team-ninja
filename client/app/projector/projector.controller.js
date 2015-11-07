@@ -13,7 +13,7 @@ angular.module('teamNinjaApp')
 
         var startCalling = function () {
             if (!promise) {
-                promise = $interval(callNumber, 7000);
+                promise = $interval(callNumber, 1000);
             }
         };
 

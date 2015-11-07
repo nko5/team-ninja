@@ -21,30 +21,41 @@ exports.callNumber = function (req, res) {
             return handleError(res, err);
         }
         if (!game) {
+            console.log(req.params.id, game);
             return res.status(404).send('Not Found');
         }
-        var number;
+        var number = 99;
         var numbers = game.calledNumbers;
         if (numbers.length != 90) {
-            number = Math.floor(Math.random() * 100);
-            if (numbers.indexOf(number) < 0 && number <= 90) {
-                numbers.push(number);
+
+            while (number > 90 || number < 1){
+                number = Math.floor(Math.random() * 100);
+                if (numbers.indexOf(number) < 0 && number <= 90) {
+                    numbers.push(number);
+                }
             }
+
+        }else{
+            number = -1;
         }
         game.save(function (err, game) {
+            if (err) {
+                return handleError(res, err);
+            }
             Number.findOne({
                 number: number
-            }, function (err, number) {
+            }, function (err, numberObj) {
                 if (err) {
                     return handleError(res, err);
                 }
-                if (!number) {
+                if (!numberObj) {
+                    console.log(numberObj, number);
                     return res.status(404).send('Not Found');
                 }
                 return res.json({
-                    number: number.number,
-                    description: number.description,
-                    inWords: number.inWords("en").replace("-", "")
+                    number: numberObj.number,
+                    description: numberObj.description,
+                    inWords: numberObj.inWords("en").replace("-", "")
                 });
             });
 
