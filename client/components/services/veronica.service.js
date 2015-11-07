@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .service('VeronicaService', function () {
+    .service('Veronica', function () {
         var self = this;
         var veronica = new SpeechSynthesisUtterance("");
         var voiceArr = speechSynthesis.getVoices();

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .controller('ProjectorCtrl', function (VeronicaService, GameApi, $interval) {
+    .controller('ProjectorCtrl', function (Veronica, GameApi, $interval) {
         var self = this;
         self.number;
         GameApi.list(function(data){
@@ -24,7 +24,7 @@ angular.module('teamNinjaApp')
         var callNumber = function () {
             GameApi.callNumber({id: self.game._id}, function(number){
                 self.number = number;
-                VeronicaService.say(number.description, [{
+                Veronica.say(number.description, [{
                     delay: 1000,
                     message: number.inWords
                 }]);
