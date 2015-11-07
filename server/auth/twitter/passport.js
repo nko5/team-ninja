@@ -23,7 +23,7 @@ exports.setup = function (User, config) {
             twitter: {
               id_str: profile.id
             },
-            profile_image_icon: profile._json.profile_image_url
+            picture: profile._json.profile_image_url
           });
           user.save(function (err) {
             if (err) return done(err);

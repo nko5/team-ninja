@@ -28,7 +28,7 @@ exports.setup = function (User, config) {
           }
         };
         if (!error && response.statusCode == 200) {
-          userObj.profile_image_icon = JSON.parse(body).data.url;
+          userObj.picture = JSON.parse(body).data.url;
         }
 
         User.findOne({

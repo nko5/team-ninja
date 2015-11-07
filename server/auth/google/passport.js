@@ -21,7 +21,7 @@ exports.setup = function (User, config) {
             google: {
               id: profile.id
             },
-            profile_image_icon: profile._json.image.url
+            picture: profile._json.image.url
           });
           user.save(function (err) {
             if (err) return done(err);
