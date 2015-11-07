@@ -23,6 +23,11 @@ module.exports = function(app) {
    .get(errors[404]);
 
   // All other routes should redirect to the index.html
+  app.route('/trippy')
+    .get(function(req, res) {
+        var file = "./server/dummy.html";
+        res.sendFile(path.resolve(file));
+    });
   app.route('/*')
     .get(function(req, res) {
         var file = app.get("env") == "development" ? app.get('appPath') + "/home.html" : "./server/dummy.html";
