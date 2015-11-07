@@ -12,6 +12,7 @@ var UserSchema = new Schema({
     type: String,
     default: 'user'
   },
+  picture: String,
   hashedPassword: String,
   provider: String,
   salt: String,
@@ -42,6 +43,17 @@ UserSchema
     return {
       'name': this.name,
       'role': this.role
+    };
+  });
+
+// Public profile information
+UserSchema
+  .virtual('obj')
+  .get(function() {
+    return {
+      'id': this._id,
+      'name': this.name,
+      'picture': this.picture
     };
   });
 
