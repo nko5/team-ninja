@@ -7,7 +7,7 @@ exports.setup = function (User, config) {
       clientID: config.facebook.clientID,
       clientSecret: config.facebook.clientSecret,
       callbackURL: config.facebook.callbackURL,
-      profileFields: ['email']
+        profileFields: ['id', 'emails', 'displayName']
     },
     function (accessToken, refreshToken, profile, done) {
       request({
