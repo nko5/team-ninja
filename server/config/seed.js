@@ -5,6 +5,14 @@ var Number = require('../api/number/number.model'),
     Game = require('../api/game/game.model'),
     Rule = require('../api/rule/rule.model');
 
+var getUserObj = function (user) {
+    return {
+        'id': user._id,
+        'name': user.name,
+        'picture': user.picture
+    };
+}
+
 var createGame = function (users, rules) {
     Game.create({
         host: users.host,
@@ -59,20 +67,26 @@ var createUsers = function (cb) {
     User.create({
         name: "Nikhil Bhandari",
         email: "nikhil.bhandari.74@gmail.com",
+        password: "supersecure",
         role: "admin"
     }, {
         name: "Manoj Nama",
         email: "manoj.nama@outlook.com",
+        password: "supersecure",
         role: "admin"
     }, {
         name: "Sakshi Tyagi",
         email: "sakhi.tyagi@gmail.com",
+        password: "supersecure",
         role: "admin"
     }, function (err, nikhil, manoj, sakshi) {
+        if (err) {
+            throw err;
+        }
         console.log("User created");
         cb({
-            players: [manoj.obj, sakshi.obj],
-            host: nikhil.obj
+            players: [getUserObj(manoj), getUserObj(sakshi)],
+            host: getUserObj(nikhil)
         })
     });
 };
