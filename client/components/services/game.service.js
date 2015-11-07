@@ -15,6 +15,11 @@ angular.module('teamNinjaApp')
                         action: "callNumber"
                     }
                 },
+                list: {
+                    get: {
+                        method: 'GET'
+                    }
+                },
                 update: {
                     method: 'PUT'
                 }
