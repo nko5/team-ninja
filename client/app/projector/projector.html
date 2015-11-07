@@ -8,13 +8,14 @@
           <label for="InputEmail">Invite friends</label>
           <input type="email" class="form-control" id="InputEmail"
                  placeholder="Email" ng-model="inviteEmail">
-          <button type="button" class="btn btn-warning" ng-click="sendInvite(getCurrentUser())">Send
+          <button type="button" class="btn btn-warning"
+                  ng-click="sendInvite(getCurrentUser())" ng-disabled="!inviteEmail">Send
             Invite</button>
         </div>
-        <button type="button" class="close" data-dismiss="alert"
-                aria-label="Close" ng-if="showMessage">
-          <span aria-hidden="true">{{alertMessage}} &times;</span>
-        </button>
+        <div class="alert alert-warning alert-dismissible fade in"
+             role="alert" ng-if="showMessage">
+          {{alertMessage}}
+        </div>
         </form>
 
     </div>
