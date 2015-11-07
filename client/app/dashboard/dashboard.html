@@ -2,12 +2,12 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      <h1>Dashboard</h1>
       <br/>
-      <button type="button" class="btn btn-success btn-lg btn-block">Host
+      <button type="button" class="btn btn-success btn-lg btn-block"
+              ng-click="goToProjector('host', getCurrentUser())">Host
       </button>
       <hr/>
-      <button type="button" class="btn btn-info btn-lg btn-block">Join
+      <button type="button" class="btn btn-info btn-lg btn-block" ng-click="goToProjector('join', getCurrentUser())">Join
       </button>
     </div>
   </div>
