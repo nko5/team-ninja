@@ -8,9 +8,36 @@ angular.module('teamNinjaApp')
 
         $scope.getCurrentUser = Auth.getCurrentUser;
 
-        GameApi.get({id: $stateParams.id}, function (data) {
-            self.game = data;
-        });
+        var init = function(){
+            GameApi.get({id: $stateParams.id}, function (data) {
+                self.game = data;
+            });
+        };
+
+        if(false){
+            init = function(){
+                GameApi.list({}, function (data) {
+                    self.game = data.games[0];
+                });
+            };
+        }
+
+        var displayMessage = function(player, message, duration){
+            player.message = message;
+            $timeout(function(){
+                if(player.message == message){
+                    player.message = "";
+                }
+            }, duration);
+        };
+
+        var findAndDisableRule = function (rule) {
+            self.game.rules.forEach(function(item, index){
+                if(item._id == rule._id){
+                    item.wonBy = true;
+                }
+            });
+        };
 
         var promise;
 
@@ -36,6 +63,8 @@ angular.module('teamNinjaApp')
 
         SocketIO.socket.on("JOIN", function (data) {
             self.game.players.push(data.user);
+
+            displayMessage(userToUpdate, "Howdy people!", 2000);
         });
 
         SocketIO.socket.on("LEAVE", function (data) {
@@ -46,6 +75,7 @@ angular.module('teamNinjaApp')
                 }
             });
             self.game.players.splice(userToRemove, 1);
+            displayMessage(userToUpdate, "Bye Bye!", 2000);
         });
 
         SocketIO.socket.on("CLAIM", function (data) {
@@ -55,14 +85,8 @@ angular.module('teamNinjaApp')
                     userToUpdate = user;
                 }
             });
-
-            userToUpdate.message = data.rule.name;
-
-            $timeout(function(){
-                if(data.rule.name == userToUpdate.message){
-                    userToUpdate.message = "";
-                }
-            }, 2000);
+            findAndDisableRule(data.rule);
+            displayMessage(userToUpdate, data.rule.name, 2000);
         });
 
         SocketIO.socket.on("CHAT", function (data) {
@@ -73,14 +97,7 @@ angular.module('teamNinjaApp')
                 }
             });
 
-            userToUpdate.message = data.message;
-
-            $timeout(function(){
-                if(data.message == userToUpdate.message){
-                    userToUpdate.message = "";
-                }
-                userToUpdate.message = "";
-            }, 2000);
+            displayMessage(userToUpdate, data.message, 2000);
         });
 
         $scope.$on("$destroy", function () {
@@ -114,4 +131,6 @@ angular.module('teamNinjaApp')
                 });
             }
         };
+
+        init();
     });

@@ -28,13 +28,19 @@
     <div class="rules">
         <h3>Prizes Remaining</h3>
         <ul>
-            <li data-ng-repeat="rule in projector.game.rules">{{rule.name}}</li>
+            <li data-ng-repeat="rule in projector.game.rules"
+                    data-ng-class="{'strike-through': rule.wonBy}">{{rule.name}}</li>
         </ul>
     </div>
 
     <div class="players" style="text-align: center; position: absolute; bottom: 25px;width: 100%;">
         <p>
-            <span data-ng-repeat="player in projector.game.players">{{player.name[0]}}</span>
+            <span data-ng-repeat="player in projector.game.players"
+                  uib-popover="{{player.message}}"
+                  popover-placement="top"
+                  popover-trigger="none"
+                  popover-is-open="player.message.length > 0"
+                    >{{player.name[0]}}</span>
         </p>
 
     </div>
