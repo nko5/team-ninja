@@ -74,14 +74,17 @@ angular.module('teamNinjaApp')
                 }
             });
 
-            userToUpdate.message = data.message;
+            if(userToUpdate) {
+                userToUpdate.message = data.message;
 
-            $timeout(function(){
-                if(data.message == userToUpdate.message){
+                $timeout(function(){
+                    if(data.message == userToUpdate.message){
+                        userToUpdate.message = "";
+                    }
                     userToUpdate.message = "";
-                }
-                userToUpdate.message = "";
-            }, 2000);
+                }, 2000);
+            }
+
         });
 
         $scope.$on("$destroy", function () {
