@@ -41,7 +41,11 @@ exports.callNumber = function (req, res) {
                 if (!number) {
                     return res.status(404).send('Not Found');
                 }
-                return res.json(number);
+                return res.json({
+                    number: number.number,
+                    description: number.description,
+                    inWords: number.inWords("en").replace("-", "")
+                });
             });
 
         });
