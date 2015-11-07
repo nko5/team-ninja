@@ -61,43 +61,58 @@ angular.module('teamNinjaApp')
             });
         };
 
-        SocketIO.socket.on("JOIN", function (data) {
-            self.game.players.push(data.user);
+        $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
+            console.log(data);
+            var userToUpdate;
+            for(var i = 0; i < self.game.players.length; i++) {
+                if(self.game.players[i].userId == data.userId) {
+                    userToUpdate = user;
+                    break;
+                }
+            }
 
-            displayMessage(userToUpdate, "Howdy people!", 2000);
+            if(userToUpdate) {
+                displayMessage(userToUpdate, "Bye Bye!", 2000);
+            }
         });
 
-        SocketIO.socket.on("LEAVE", function (data) {
+        $scope.$on("socket:" + AppConstants.Events.CLAIM, function (evt, data) {
+            var userToUpdate;
+            for(var i = 0; i < self.game.players.length; i++) {
+                if(self.game.players[i].userId == data.userId) {
+                    userToUpdate = user;
+                    break;
+                }
+            }
+
+            if(userToUpdate) {
+                findAndDisableRule(data.rule);
+                displayMessage(userToUpdate, data.rule.name, 2000);
+            }
+
+        });
+        $scope.$on("socket:" + AppConstants.Events.JOIN, function (evt, data) {
+            var isNewUser = true;
+            for(var i = 0; i < self.game.players.length; i++) {
+                if(self.game.players[i].userId == data.userId) {
+                    isNewUser = false;
+                    break;
+                }
+            }
+            if(isNewUser) {
+                self.game.players.push(data);
+            }
+        });
+        $scope.$on("socket:" + AppConstants.Events.LEAVE, function (evt, data) {
             var userToRemove;
-            self.game.players.forEach(function(user, index){
-                if(user._id == data.userId){
+            self.game.players.forEach(function (user, index) {
+                if (user.userId == data.userId) {
                     userToRemove = index;
                 }
             });
-            self.game.players.splice(userToRemove, 1);
-            displayMessage(userToUpdate, "Bye Bye!", 2000);
-        });
-
-        SocketIO.socket.on("CLAIM", function (data) {
-            var userToUpdate;
-            self.game.players.forEach(function(user){
-                if(user._id == data.userId){
-                    userToUpdate = user;
-                }
-            });
-            findAndDisableRule(data.rule);
-            displayMessage(userToUpdate, data.rule.name, 2000);
-        });
-
-        SocketIO.socket.on("CHAT", function (data) {
-            var userToUpdate;
-            self.game.players.forEach(function(user){
-                if(user._id == data.userId){
-                    userToUpdate = user;
-                }
-            });
-
-            displayMessage(userToUpdate, data.message, 2000);
+            if(userToRemove) {
+                self.game.players.splice(userToRemove, 1);
+            }
         });
 
         $scope.$on("$destroy", function () {
