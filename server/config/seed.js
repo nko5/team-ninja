@@ -1,6 +1,6 @@
 'use strict';
 
-var Number = require('../api/user/number.model');
+var Number = require('../api/number/number.model');
 
 Number.count({}, function (err, count) {
     if (count == 0) {
