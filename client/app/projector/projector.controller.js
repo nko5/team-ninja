@@ -109,12 +109,14 @@ angular.module('teamNinjaApp')
         });
         $scope.$on("socket:" + AppConstants.Events.LEAVE, function (evt, data) {
             var userToRemove;
-            self.game.players.forEach(function(user, index){
-                if(user.userId == data.userId){
+            self.game.players.forEach(function (user, index) {
+                if (user.userId == data.userId) {
                     userToRemove = index;
                 }
             });
-            self.game.players.splice(userToRemove, 1);
+            if(userToRemove) {
+                self.game.players.splice(userToRemove, 1);
+            }
         });
 
         $scope.$on("$destroy", function () {
