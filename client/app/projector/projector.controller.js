@@ -1,15 +1,16 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .controller('ProjectorCtrl', function (Veronica, GameApi, $interval, $scope, User, Auth, $timeout, SocketIO) {
+    .controller('ProjectorCtrl', function (Veronica, GameApi, $interval, $scope, AppConstants, SocketIO, User, Auth, $timeout, $stateParams) {
         var self = this;
         self.number;
         $scope.showMessage = false;
 
         $scope.getCurrentUser = Auth.getCurrentUser;
 
-        GameApi.list(function (data) {
-            self.game = data.games[0];
+        GameApi.get({id: $stateParams.id}, function (data) {
+            self.game = data;
+            startCalling();
         });
 
         var promise;
@@ -90,6 +91,9 @@ angular.module('teamNinjaApp')
             socket.removeAllListeners("CHAT");
         });
 
+        $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
+            console.log(data);
+        });
         $scope.sendInvite = function (user) {
             console.log(user);
             if (user) {

@@ -6,10 +6,11 @@
         <div class="form-group">
           <label for="code" class="text-primary">Enter code to join</label>
           <input type="text" class="form-control" id="code"
-                 placeholder="Code">
+                 placeholder="Code" ng-model="code">
         </div>
         <button type="submit"
-                class="btn btn-warning"><icon class="glyphicon glyphicon-arrow-right"></icon></button>
+                class="btn btn-warning" ng-disabled="!code"><icon
+            class="glyphicon glyphicon-arrow-right" ng-click="openTicket(getCurrentUser())"></icon></button>
       </form>
     </div>
   </div>

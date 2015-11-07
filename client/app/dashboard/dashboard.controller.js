@@ -8,7 +8,7 @@ angular.module('teamNinjaApp')
         host: {
           id: user._id,
           name: user.name,
-          picture: user.profile_image_icon
+          picture: user.picture
         }
       }, function (result) {
         if (result && result._id) {

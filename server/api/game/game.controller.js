@@ -79,12 +79,13 @@ exports.show = function (req, res) {
 // Creates a new game in the DB.
 exports.create = function (req, res) {
     req.body.dateCreated = +new Date();
-    Game.create(req.body, function (err, game) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.status(201).json(game);
-    });
+
+  new Game(req.body).save(function (err, game) {
+    if (err) {
+      return handleError(res, err);
+    }
+    return res.status(201).json(game);
+  });
 };
 
 // Updates an existing game in the DB.
@@ -130,3 +131,35 @@ exports.destroy = function (req, res) {
 function handleError(res, err) {
     return res.status(500).send(err);
 }
+
+// Add player to a game
+exports.addPlayer = function (req, res) {
+  var player = {
+    id : req.body._id,
+    name : req.body.name,
+    picture : req.body.picture
+  };
+  if (req.body.gameId) {
+    Game.findById(req.body.gameId, function (err, game) {
+      if (err) {
+        return handleError(res, err);
+      }
+      else{
+        Game.update(
+          { _id: req.body.gameId },
+          { $addToSet: {players: player } }, function(err,game){
+            if(err){
+              return res.json({
+                updated : false
+              });
+            }
+            else{
+              return res.json({
+                updated : true
+              });
+            }
+          });
+      }
+    });
+  }
+};

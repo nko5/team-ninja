@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/teamninja-dev'
   },
 
-  seedDB: true
+  seedDB: false
 };

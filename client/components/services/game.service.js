@@ -29,7 +29,7 @@ angular.module('teamNinjaApp')
         addPlayer: {
           method: 'POST',
           params: {
-            action: "addPlayer"
+            id: "addPlayer"
           }
         }
       });
