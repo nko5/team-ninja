@@ -85,12 +85,11 @@
     "should": "~3.3.1"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": "4.2.2"
   },
   "scripts": {
     "start": "node server/app.js",
     "test": "grunt test",
-    "postinstall": "bower install",
     "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   },
   "private": true
