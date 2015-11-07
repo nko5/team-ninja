@@ -25,6 +25,12 @@ angular.module('teamNinjaApp')
         },
         save: {
           method: 'POST'
+        },
+        addPlayer: {
+          method: 'POST',
+          params: {
+            action: "addPlayer"
+          }
         }
       });
   });
