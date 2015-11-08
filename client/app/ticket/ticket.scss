@@ -102,7 +102,7 @@ body {
     display: inline-block;
     & > a {
       display: block;
-      width: 150px;
+      width: 80px;
       text-align: center;
       border: 1px solid #ccc;
       background-color: #eee;
@@ -152,9 +152,9 @@ body {
   }
   .chat-area {
     display: inline-block;
-    width: calc(100% - 160px);
+    width: calc(100% - 90px);
     .hkv-textbox {
-      width: 90%;
+      width: calc(100% - 80px);
       outline: none;
       margin: 0 auto;
       font-size: 1.4em;
