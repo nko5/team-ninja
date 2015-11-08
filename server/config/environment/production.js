@@ -18,7 +18,7 @@ module.exports = {
     uri:    process.env.MONGOLAB_URI ||
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
-            'mongodb://root:yvywUseq2e@waffle.modulusmongo.net:27017/yn4Yvesi?autoReconnect=true&connectTimeoutMS=60000' ||
+            'mongodb://root:root@waffle.modulusmongo.net:27017/yn4Yvesi?autoReconnect=true&connectTimeoutMS=60000' ||
             'mongodb://localhost/teamninja'
   }
 };
