@@ -91,7 +91,7 @@ exports.create = function (req, res) {
 
         var game = new Game({
             host: user,
-            player: [user],
+            players: [user],
             rules: rules.map(function (item) {
                 return {
                     id: item._id,
