@@ -17,6 +17,10 @@ angular.module('teamNinjaApp')
         var init = function () {
             GameApi.get({id: $stateParams.id}, function (data) {
                 self.game = data;
+                if(self.game.calledNumbers.length > 89){
+                    self.gameOver = true;
+                    return;
+                }
                 SocketIO.send(AppConstants.Events.JOIN, {gameId: $stateParams.id});
             });
         };
@@ -43,6 +47,8 @@ angular.module('teamNinjaApp')
 
         self.startCalling = function () {
             self.started = true;
+
+
             $timeout(function () {
                 Veronica.say("Starting game in");
             }, 1000);
