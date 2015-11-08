@@ -49,6 +49,7 @@ var GameSchema = new Schema({
             ref: 'Rule'
         },
         name: String,
+        identifier: String,
         wonBy: {
             type: Schema.Types.ObjectId,
             ref: 'User'

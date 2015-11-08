@@ -109,7 +109,8 @@ exports.create = function (req, res) {
                 rules: rules.map(function (item) {
                     return {
                         id: item._id,
-                        name: item.name
+                        name: item.name,
+                        identifier: item.identifier
                     }
                 })
             });
