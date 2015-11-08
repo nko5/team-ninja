@@ -60,4 +60,16 @@
 
     </div>
 
+    <div class="win-screen" data-ng-if="projector.wonGame">
+        <div class="heading">Congratulations, {{projector.reward.user.name}}!</div>
+
+        <p>
+            For claiming the prize for {{projector.reward.rules.name}}. Well done!
+        </p>
+
+        <a class="close-btn" href="#" data-ng-click="projector.closeWonMessage()">
+            <i class="fa fa-times"></i>
+        </a>
+    </div>
+
 </div>

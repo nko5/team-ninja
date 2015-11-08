@@ -13,7 +13,7 @@ angular.module('teamNinjaApp')
         };
 
         self.closeWinMessage = function () {
-            self.wonGame = !self.wonGame;
+            self.wonGame = false;
         };
 
         var timer;

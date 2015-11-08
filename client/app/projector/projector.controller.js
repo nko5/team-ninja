@@ -7,8 +7,13 @@ angular.module('teamNinjaApp')
         $scope.showMessage = false;
         $scope.getCurrentUser = Auth.getCurrentUser;
         self.number = null;
+        self.reward = {};
         self.connectedPlayers = [];
         self.invite = PopupService.invite;
+
+        self.closeWonMessage = function () {
+            self.wonGame = false;
+        };
         var init = function () {
             GameApi.get({id: $stateParams.id}, function (data) {
                 self.game = data;
@@ -122,6 +127,16 @@ angular.module('teamNinjaApp')
             }
         };
 
+        var claimResult = function (data) {
+            self.wonGame = data.won;
+            self.reward.won = data.won;
+            self.reward.user = data.user;
+            self.reward.rules = data.rule;
+            $timeout(function () {
+                self.wonGame = false;
+            }, 5000);
+        };
+
         SocketIO.bindAll([{
             name: Events.CHAT,
             callback: showMessage
@@ -134,6 +149,9 @@ angular.module('teamNinjaApp')
         }, {
             name: Events.LEAVE,
             callback: removeUser
+        }, {
+            name: Events.CLAIM_RESULT,
+            callback: claimResult
         }]);
 
         $scope.$on("$destroy", function () {
