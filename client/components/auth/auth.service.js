@@ -128,6 +128,23 @@ angular.module('teamNinjaApp')
       },
 
       /**
+       * Waits for currentUser to resolve before checking if user is logged in
+       */
+      getCurrentUserInAsync: function(cb) {
+        if(currentUser.hasOwnProperty('$promise')) {
+          currentUser.$promise.then(function() {
+            cb(currentUser);
+          }).catch(function() {
+            cb(null);
+          });
+        } else if(currentUser.hasOwnProperty('role')) {
+          cb(currentUser);
+        } else {
+          cb(null);
+        }
+      },
+
+      /**
        * Check if a user is an admin
        *
        * @return {Boolean}

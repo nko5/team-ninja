@@ -1,52 +1,33 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .controller('TicketCtrl', function (GameApi, AppConstants, SocketIO, Auth, $scope) {
+    .controller('TicketCtrl', function (GameApi, AppConstants, SocketIO, Auth, $scope, $stateParams, $state) {
         var self = this;
 
-        self.currentUser = Auth.getCurrentUser();
-
-        self.currentUser && self.currentUser.$promise.then(function (user) {
-            self.userObj = {
-                type: AppConstants.Events.LEAVE,
-                userId: self.currentUser._id,
-                profile_image_icon: self.currentUser.profile_image_icon
-            };
-            SocketIO.send(AppConstants.Events.JOIN, self.userObj);
+        Auth.isLoggedInAsync(function (isLoggedIn) {
+            if (isLoggedIn) {
+                SocketIO.send(AppConstants.Events.JOIN);
+            } else {
+                $state.go("login");
+            }
         });
 
-        GameApi.list(function (data) {
-            self.game = data.games[0];
+        GameApi.get({id: $stateParams.id}, function (data) {
+            self.game = data;
         });
 
         self.fireClaim = function (rule) {
-            var _obj = {
-                type: AppConstants.Events.CLAIM,
-                userId: self.currentUser._id,
-                profile_image_icon: self.currentUser.profile_image_icon,
-                rule: rule
-            };
-            SocketIO.send(AppConstants.Events.CLAIM, _obj);
+            SocketIO.send(AppConstants.Events.CLAIM, {rule: rule});
         };
 
         self.sendChat = function () {
-            var msg = self.message && self.message.trim();
-            if(msg) {
-                var _obj = {
-                    type: AppConstants.Events.CHAT,
-                    userId: self.currentUser._id,
-                    profile_image_icon: self.currentUser.profile_image_icon,
-                    message: self.message
-                };
-                SocketIO.send(AppConstants.Events.CHAT, _obj);
+            var message = self.message && self.message.trim();
+            if (message) {
+                SocketIO.send(AppConstants.Events.CHAT, {message: message});
             }
         };
 
-        $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
-            console.log(data);
-        });
-
         $scope.$on("$destroy", function () {
-            SocketIO.send(AppConstants.Events.LEAVE, self.userObj);
+            SocketIO.send(AppConstants.Events.LEAVE);
         });
     });
