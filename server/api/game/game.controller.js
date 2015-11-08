@@ -6,7 +6,6 @@ var async = require("async");
 var Number = require('../number/number.model');
 var Rule = require('../rule/rule.model');
 var Ticket = require('../ticket/ticket.model');
-var lodash = require('lodash');
 
 // Get list of games
 exports.index = function (req, res) {
@@ -167,85 +166,6 @@ exports.destroy = function (req, res) {
 function handleError(res, err) {
     return res.status(500).send(err);
 }
-
-var findTicket = function (game, userId) {
-    var userTicket;
-    for (var i = 0; i < game.tickets.length; i++) {
-        var ticket = game.tickets[i];
-        if (ticket.userId && ticket.userId.toString() == userId.toString()) {
-            userTicket = ticket;
-            break;
-        }
-    }
-    return ticket;
-}
-
-var checkFullHouse = function (ticket, game, selected) {
-    var result = false;
-    var flatTicket = _.flatten(ticket.board).filter(function (val) {
-        return val != null;
-    });
-    var i1 = lodash.intersect(selected, flatTicket);
-    var i2 = lodash.intersect(selected, game.calledNumbers);
-    if (i1.length == i2.length && i1.length == flatTicket.length) {
-        result = true;
-    }
-    return result;
-
-};
-
-var checkLane = function (lane, game, selected) {
-    var flatTicket = _.flatten(ticket.board).filter(function (val) {
-        return val != null;
-    });
-    var i1 = lodash.intersect(selected, lane);
-    var i2 = lodash.intersect(selected, game.calledNumbers);
-    return i1.length == i2.length && i1.length == lane.length;
-};
-
-var checkRule = function (rule, user, game, selected) {
-    var ticket = findTicket(game, user._id || user.id);
-    var result = false;
-    switch (rule.identifier) {
-        case "FH1":
-            result = checkFullHouse(ticket, game, selected);
-            break;
-        case "FH2":
-            result = checkFullHouse(ticket, game, selected);
-            break;
-        case "FH3":
-            result = checkFullHouse(ticket, game, selected);
-            break;
-        case "FH4":
-            result = checkFullHouse(ticket, game, selected);
-            break;
-        case "TL":
-            result = checkLane(ticket.board[0], game, selected);
-            break;
-        case "ML":
-            result = checkLane(ticket.board[1], game, selected);
-            break;
-        case "BL":
-            result = checkLane(ticket.board[2], game, selected);
-            break;
-        default :
-            break;
-    }
-    return result;
-};
-
-exports.claim = function (req, res) {
-    Game.findById(req.params.id, function (err, game) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!game) {
-            return res.status(404).send('Not Found');
-        }
-        var result = checkRule(req.body.rule, req.user, game, req.body.selected);
-        return res.json({won: result});
-    });
-};
 
 exports.addPlayer = function (req, res) {
     var player = {

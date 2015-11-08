@@ -32,6 +32,7 @@ angular.module('teamNinjaApp')
                 SocketIO.bindAll([{
                     name: AppConstants.Events.ACKNOWLEDGE,
                     callback: function () {
+                        console.log("mil ajvh")
                         self.connected = true;
                         $timeout.cancel(timer);
                     }
@@ -77,11 +78,6 @@ angular.module('teamNinjaApp')
 
         self.fireClaim = function (rule) {
             var selected = getSelected();
-            GameApi.claim({_id: $stateParams.id, rule: rule, selected: selected}, function (data) {
-                console.log(data);
-            }, function () {
-
-            });
             SocketIO.send(AppConstants.Events.CLAIM, {rule: rule, gameId: $stateParams.id, selected: selected});
         };
 
