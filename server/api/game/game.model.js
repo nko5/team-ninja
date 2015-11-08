@@ -20,6 +20,11 @@ var GameSchema = new Schema({
         name: String,
         picture: String
     }],
+    tickets: [{
+        board: Array,
+        status: String,
+        userId: { type: Schema.Types.ObjectId, ref: 'User'}
+    }],
     dateCreated: {
         type: Number,
         default: Date.now
