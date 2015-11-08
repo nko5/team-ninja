@@ -36,7 +36,23 @@ angular.module('teamNinjaApp')
 
         var promise;
 
-        var startCalling = function () {
+        self.startCalling = function () {
+            self.started = true;
+            $timeout(function () {
+                Veronica.say("Starting game in");
+            }, 1000);
+            $timeout(function () {
+                Veronica.say("Three");
+            }, 2000);
+
+            $timeout(function () {
+                Veronica.say("Two");
+            }, 3000);
+            $timeout(function () {
+                Veronica.say("One");
+            }, 4000);
+
+
             if (!promise) {
                 promise = $interval(callNumber, 7000);
             }

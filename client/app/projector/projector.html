@@ -20,9 +20,10 @@
     </div>
 
     <div class="veronica-cont">
-        <div class="veronica" data-ng-class="{'start': projector.start}">
+        <div class="veronica" data-ng-class="{'start': projector.started}" data-ng-click="projector.startCalling()">
             <div class="wrapper"></div>
-            <span class="number">{{projector.number.number || "..."}}</span>
+            <span class="number roboto">{{projector.number.number }}</span>
+            <span class="glyphicon  glyphicon-play number play" data-ng-hide="projector.started"></span>
         </div>
         <div class="veronica-shadow"></div>
     </div>
