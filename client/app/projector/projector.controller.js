@@ -3,37 +3,30 @@
 angular.module('teamNinjaApp')
     .controller('ProjectorCtrl', function (Veronica, GameApi, $interval, $scope, AppConstants, SocketIO, User, Auth, $timeout, $stateParams) {
         var self = this;
-        self.number;
+        var Events = AppConstants.Events;
         $scope.showMessage = false;
-
         $scope.getCurrentUser = Auth.getCurrentUser;
+        self.number = null;
 
-        var init = function(){
+        var init = function () {
             GameApi.get({id: $stateParams.id}, function (data) {
                 self.game = data;
             });
         };
 
-        if(false){
-            init = function(){
-                GameApi.list({}, function (data) {
-                    self.game = data.games[0];
-                });
-            };
-        }
-
-        var displayMessage = function(player, message, duration){
+        var displayMessage = function (player, message, duration, cb) {
             player.message = message;
-            $timeout(function(){
-                if(player.message == message){
+            $timeout(function () {
+                if (player.message == message) {
                     player.message = "";
                 }
+                cb();
             }, duration);
         };
 
         var findAndDisableRule = function (rule) {
-            self.game.rules.forEach(function(item, index){
-                if(item._id == rule._id){
+            self.game.rules.forEach(function (item, index) {
+                if (item._id == rule._id) {
                     item.wonBy = true;
                 }
             });
@@ -45,6 +38,21 @@ angular.module('teamNinjaApp')
             if (!promise) {
                 promise = $interval(callNumber, 7000);
             }
+        };
+
+        var findUser = function (id) {
+            var user = null;
+
+            self.game.players.forEach(function (player, index) {
+                if (player.id == id) {
+                    user = {
+                        obj: player,
+                        index: index
+                    }
+                }
+            });
+
+            return user;
         };
 
         var clearInterval = function () {
@@ -61,66 +69,61 @@ angular.module('teamNinjaApp')
             });
         };
 
-        $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
-            console.log(data);
-            var userToUpdate;
-            for(var i = 0; i < self.game.players.length; i++) {
-                if(self.game.players[i].userId == data.userId) {
-                    userToUpdate = user;
-                    break;
-                }
+        var showMessage = function (event, data) {
+            var user = findUser(data.source._id);
+            if (user) {
+                displayMessage(user.obj, data.message, 2000);
             }
-
-            if(userToUpdate) {
-                displayMessage(userToUpdate, "Bye Bye!", 2000);
-            }
-        });
-
-        $scope.$on("socket:" + AppConstants.Events.CLAIM, function (evt, data) {
-            var userToUpdate;
-            for(var i = 0; i < self.game.players.length; i++) {
-                if(self.game.players[i].userId == data.userId) {
-                    userToUpdate = user;
-                    break;
-                }
-            }
-
-            if(userToUpdate) {
+        };
+        var disablePrize = function (event, data) {
+            var user = findUser(data.source._id);
+            if (user) {
                 findAndDisableRule(data.rule);
-                displayMessage(userToUpdate, data.rule.name, 2000);
+                displayMessage(user.obj, data.rule.name, 2000);
             }
+        };
 
-        });
+        var addUser = function (event, data) {
+            var user = findUser(data.source._id);
+            if (!user) {
+                self.game.players.push({
+                    id: data.source._id,
+                    name: data.source.name,
+                    picture: data.source.picture
+                });
+            }
+        };
 
-        $scope.$on("socket:" + AppConstants.Events.JOIN, function (evt, data) {
-            var isNewUser = true;
-            for(var i = 0; i < self.game.players.length; i++) {
-                if(self.game.players[i].userId == data.userId) {
-                    isNewUser = false;
-                    break;
-                }
+        var removeUser = function (event, data) {
+            var user = findUser(data.source._id);
+            if (user) {
+                displayMessage(user.obj, "Bye Bye!", 1000, function () {
+                    self.game.players.splice(user.index, 1);
+                });
             }
-            if(isNewUser) {
-                self.game.players.push(data);
-            }
-        });
-        $scope.$on("socket:" + AppConstants.Events.LEAVE, function (evt, data) {
-            var userToRemove;
-            self.game.players.forEach(function (user, index) {
-                if (user.userId == data.userId) {
-                    userToRemove = index;
-                }
-            });
-            if(userToRemove) {
-                self.game.players.splice(userToRemove, 1);
-            }
-        });
+        };
+
+        SocketIO.bindAll([{
+            name: Events.CHAT,
+            callback: showMessage
+        }, {
+            name: Events.CLAIM,
+            callback: disablePrize
+        }, {
+            name: Events.JOIN,
+            callback: addUser
+        }, {
+            name: Events.LEAVE,
+            callback: removeUser
+        }]);
 
         $scope.$on("$destroy", function () {
-            socket.removeAllListeners("JOIN");
-            socket.removeAllListeners("LEAVE");
-            socket.removeAllListeners("CLAIM");
-            socket.removeAllListeners("CHAT");
+            SocketIO.unbindAll([
+                Events.CHAT,
+                Events.CLAIM,
+                Events.LEAVE,
+                Events.JOIN
+            ])
         });
 
         $scope.sendInvite = function (user) {
