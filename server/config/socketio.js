@@ -90,7 +90,7 @@ module.exports = function (socketio) {
                 GameService.claim(data, function (result) {
                     result.user = currentUser;
                     socket.to(socket.gameId).emit(Constants.Events.CLAIM_RESULT, result);
-                    socket.to(currentUser._id).emit(Constants.Events.CLAIM_RESULT, result);
+                    socket.emit(Constants.Events.CLAIM_RESULT, result);
                 });
 
                 socket.to(socket.gameId).emit(Constants.Events.CLAIM, {

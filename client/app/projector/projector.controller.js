@@ -84,6 +84,11 @@ angular.module('teamNinjaApp')
 
         var callNumber = function () {
             GameApi.callNumber({id: self.game._id}, function (number) {
+                if(number.number < 0){
+                    self.gameOver = true;
+                    clearInterval();
+                    return;
+                }
                 self.number = number;
                 Veronica.say(number.description, [{
                     delay: 1000,

@@ -45,6 +45,11 @@ exports.callNumber = function (req, res) {
             if (err) {
                 return handleError(res, err);
             }
+            if(number == -1){
+                return res.json({
+                    number: -1
+                });
+            }
             Number.findOne({
                 number: number
             }, function (err, numberObj) {

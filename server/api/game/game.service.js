@@ -17,6 +17,17 @@ var findTicket = function (game, userId) {
     }
     return ticket;
 };
+var findRule = function (game, identifier) {
+    var rule;
+    for (var i = 0; i < game.rules.length; i++) {
+        var r = game.rules[i];
+        if (r.identifier == identifier) {
+            rule = r;
+            break;
+        }
+    }
+    return rule;
+};
 
 var checkFullHouse = function (ticket, game, selected) {
     var result = false;
@@ -33,12 +44,12 @@ var checkFullHouse = function (ticket, game, selected) {
 };
 
 var checkLane = function (lane, game, selected) {
-    var flatTicket = _.flatten(ticket.board).filter(function (val) {
+    var flatTicket = _.flatten(lane).filter(function (val) {
         return val != null;
     });
-    var i1 = _.intersection(selected, lane);
+    var i1 = _.intersection(selected, flatTicket);
     var i2 = _.intersection(selected, game.calledNumbers);
-    return i1.length == i2.length && i1.length == lane.length;
+    return i1.length == i2.length && i1.length == flatTicket.length;
 };
 
 var checkRule = function (rule, user, game, selected) {
@@ -69,6 +80,12 @@ var checkRule = function (rule, user, game, selected) {
         default :
             break;
     }
+    if (result == false) {
+        ticket.health--;
+    } else {
+        var r = findRule(game, rule.identifier)
+        r.wonBy = user._id || user.id;
+    }
     return result;
 };
 
@@ -81,6 +98,7 @@ exports.claim = function (data, callback) {
             return callback(err);
         }
         var result = checkRule(data.rule, data.user, game, data.selected);
+        game.save();
         return callback({won: result, rule: data.rule});
     });
 };
