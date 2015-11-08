@@ -5,6 +5,7 @@ var Game = require('./game.model');
 var async = require("async");
 var Number = require('../number/number.model');
 var Rule = require('../rule/rule.model');
+var Ticket = require('../ticket/ticket.model');
 
 // Get list of games
 exports.index = function (req, res) {
@@ -89,12 +90,21 @@ exports.create = function (req, res) {
         if (err) {
             return handleError(res, err);
         }
-
-        exports.generateBoard(function (tickets) {
+        Ticket.findOne({used: false}, function (err, board) {
+            if (err) {
+                return handleError(res, err);
+            }
+            board.used = true;
+            board.save();
             var game = new Game({
                 host: user,
                 players: [user],
-                tickets: tickets,
+                tickets: board.tickets.map(function (ticket) {
+                    return {
+                        board:ticket,
+                        status: false
+                    }
+                }),
                 rules: rules.map(function (item) {
                     return {
                         id: item._id,

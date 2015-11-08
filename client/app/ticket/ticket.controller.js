@@ -39,6 +39,14 @@ angular.module('teamNinjaApp')
 
         GameApi.get({id: $stateParams.id}, function (data) {
             self.game = data;
+            for(var i = 0; i < self.game.tickets; i++){
+                var ticket = self.game.tickets[i];
+                if(ticket.userId == Auth.getCurrentUser()._id){
+                    self.ticket = ticket;
+                    console.log("found", ticket);
+                    break;
+                }
+            }
         });
 
         self.fireClaim = function (rule) {

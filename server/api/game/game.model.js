@@ -22,7 +22,7 @@ var GameSchema = new Schema({
     }],
     tickets: [{
         board: Array,
-        status: String,
+        used: Boolean,
         userId: { type: Schema.Types.ObjectId, ref: 'User'}
     }],
     dateCreated: {
