@@ -29,6 +29,9 @@ $btnGithubBackgroundHighlight:      #ccc;
   }
   .social-login {
     padding-top: 20vh;
+    .logo-img {
+      width: 75px;
+    }
     a {
       display: inline-block;
       width: 100px;
