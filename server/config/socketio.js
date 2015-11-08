@@ -5,57 +5,74 @@
 'use strict';
 
 var config = require('./environment');
-
-// When the user disconnects.. perform this
-function onDisconnect(socket) {
-}
-
-// When the user connects.. perform this
-function onConnect(socket) {
-  // When the client emits 'info', this listens and executes
-  socket.on('info', function (data) {
-    console.info('[%s] %s', socket.address, JSON.stringify(data, null, 2));
-  });
-
-  // Insert sockets below
-  require('../api/rule/rule.socket').register(socket);
-  require('../api/number/number.socket').register(socket);
-  require('../api/game/game.socket').register(socket);
-  require('../api/thing/thing.socket').register(socket);
-  require('../api/chat/chat.socket').register(socket);
-}
+var Game = require('../api/game/game.model');
+var User = require('../api/user/user.model');
+var socketioJwt = require('socketio-jwt');
+var Constants = require("../components/constants");
 
 module.exports = function (socketio) {
-  // socket.io (v1.x.x) is powered by debug.
-  // In order to see all the debug output, set DEBUG (in server/config/local.env.js) to including the desired scope.
-  //
-  // ex: DEBUG: "http*,socket.io:socket"
+    socketio.set('authorization', socketioJwt.authorize({
+        secret: config.secrets.session,
+        handshake: true
+    }));
 
-  // We can authenticate socket.io users and access their token through socket.handshake.decoded_token
-  //
-  // 1. You will need to send the token in `client/components/socket/socket.service.js`
-  //
-  // 2. Require authentication here:
-  // socketio.use(require('socketio-jwt').authorize({
-  //   secret: config.secrets.session,
-  //   handshake: true
-  // }));
+    socketio.on('connection', function (socket) {
+        var currentUser;
 
-  socketio.on('connection', function (socket) {
-    socket.address = socket.handshake.address !== null ?
-            socket.handshake.address.address + ':' + socket.handshake.address.port :
-            process.env.DOMAIN;
+        User.findById(socket.client.request.decoded_token._id, function (err, user) {
+            currentUser = user;
+            console.log(user.name, ': CONNECTED');
+        });
 
-    socket.connectedAt = new Date();
+        socket.connectedAt = new Date();
 
-    // Call onDisconnect.
-    socket.on('disconnect', function () {
-      onDisconnect(socket);
-      console.info('[%s] DISCONNECTED', socket.address);
+        socket.on(Constants.Events.JOIN, function (data) {
+            Game.findById(data.gameId, function (err, game) {
+                if (game && game.hasPlayer(currentUser)) {
+                    socket.join(socket.gameId);
+                    socket.broadcast.to(socket.gameId).emit(Constants.Events.JOIN, 'SERVER', {
+                        source: currentUser
+                    });
+                } else {
+
+                }
+            })
+        });
+
+        socket.on(Constants.Events.CHAT, function (data) {
+            if (socket.gameId) {
+                socket.broadcast.to(socket.gameId).emit(Constants.Events.CHAT, 'SERVER', {
+                    source: currentUser,
+                    message: data.message
+                });
+            }
+        });
+
+        socket.on(Constants.Events.LEAVE, function (data) {
+            if (socket.gameId) {
+                socket.broadcast.to(socket.gameId).emit(Constants.Events.LEAVE, 'SERVER', {
+                    source: currentUser
+                });
+            }
+        });
+
+        socket.on(Constants.Events.CLAIM, function (data) {
+            if (socket.gameId) {
+                socket.broadcast.to(socket.gameId).emit(Constants.Events.CLAIM, 'SERVER', {
+                    source: currentUser,
+                    rule: data.rule
+                });
+            }
+        });
+
+        socket.on('disconnect', function () {
+            if (socket.gameId) {
+                socket.broadcast.to(socket.gameId).emit(Constants.Events.LEAVE, 'SERVER', {
+                    source: currentUser
+                });
+            }
+            console.log(currentUser.name, ': DISCONNECTED');
+        });
+
     });
-
-    // Call onConnect.
-    onConnect(socket);
-    console.info('[%s] CONNECTED', socket.address);
-  });
 };

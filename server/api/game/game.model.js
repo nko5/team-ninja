@@ -53,4 +53,16 @@ var GameSchema = new Schema({
     active: Boolean
 });
 
+GameSchema.methods = {
+    hasPlayer: function (user) {
+        var user;
+
+        for (var i = 0; i < this.players.length; i++) {
+            if ([this.players[i].id == user._id]) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
 module.exports = mongoose.model('Game', GameSchema);
