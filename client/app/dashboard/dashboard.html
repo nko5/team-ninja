@@ -1,14 +1,20 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <br/>
-      <button type="button" class="btn btn-success btn-lg btn-block"
-              ng-click="goToProjector(getCurrentUser())">Host
-      </button>
-      <hr/>
-      <button type="button" class="btn btn-info btn-lg btn-block" ng-click="joinGame()">Join
-      </button>
+
+<div class="container login">
+    <div class="row social-login host-screen">
+        <div class="col-sm-12">
+            <br/>
+            <!--<button type="button" class="btn btn-success btn-lg btn-block"-->
+            <!--ng-click="goToProjector(getCurrentUser())">Host-->
+            <!--</button>-->
+            <a class="host" href="javascript:void(0)" ng-click="goToProjector(getCurrentUser())">Host a new game!</a>
+
+            <div class="sep">
+                <div class="hr"></div>
+                <div class="badge">or</div>
+            </div>
+
+            <a class="join" href="javascript:void(0)" ng-click="joinGame()">Join</a>
+        </div>
     </div>
-  </div>
 </div>
