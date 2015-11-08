@@ -1,28 +1,37 @@
-<div class="col-xs-12 projector" style="position: relative;height: 100%;">
+<div class="col-xs-12 projector">
+    <div class="pull-left"><a href="/"><img class="logo-img" src="/assets/images/housie-logo.png" alt="Housie logo"/></a></div>
     <div class="brand">
-        <span class="name">Housie</span>
-        <span class="tagline">fun filled family game</span>
-        <span class="time-elapsed">Time elapsed {{"18:25"}}</span>
-      <form>
-        <div class="form-group">
-          <label for="InputEmail">Invite friends</label>
-          <input type="email" class="form-control" id="InputEmail"
-                 placeholder="Email" ng-model="inviteEmail">
-          <button type="button" class="btn btn-warning"
-                  ng-click="sendInvite(getCurrentUser())" ng-disabled="!inviteEmail">Send
-            Invite</button>
-        </div>
-        <div class="alert alert-warning alert-dismissible fade in"
-             role="alert" ng-if="showMessage">
-          {{alertMessage}}
-        </div>
-        </form>
+        <span class="time-elapsed">{{"15m 03s"}}</span>
+      <!--<form>-->
+        <!--<div class="form-group">-->
+          <!--<label for="InputEmail">Invite friends</label>-->
+          <!--<input type="email" class="form-control" id="InputEmail"-->
+                 <!--placeholder="Email" ng-model="inviteEmail">-->
+          <!--<button type="button" class="btn btn-warning"-->
+                  <!--ng-click="sendInvite(getCurrentUser())" ng-disabled="!inviteEmail">Send-->
+            <!--Invite</button>-->
+        <!--</div>-->
+        <!--<div class="alert alert-warning alert-dismissible fade in"-->
+             <!--role="alert" ng-if="showMessage">-->
+          <!--{{alertMessage}}-->
+        <!--</div>-->
+        <!--</form>-->
 
     </div>
 
-    <div class="veronica">
-        <div class="wrapper"></div>
-        <span class="number">{{projector.number.number || "..."}}</span>
+    <div class="lives">
+        <p class="pull-left">Health:</p>
+        <div class="heart pull-left"><i class="fa fa-heart"></i></div>
+        <div class="heart pull-left"><i class="fa fa-heart"></i></div>
+        <div class="heart pull-left"><i class="fa fa-heart-o"></i></div>
+    </div>
+
+    <div class="veronica-cont">
+        <div class="veronica">
+            <div class="wrapper"></div>
+            <span class="number">{{projector.number.number || "..."}}</span>
+        </div>
+        <div class="veronica-shadow"></div>
     </div>
 
     <div class="rules">

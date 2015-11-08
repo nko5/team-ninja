@@ -1,8 +1,25 @@
+.full-width {
+  .container {
+    width: 100%;
+  }
+}
 .projector {
+  position: relative;
+  height: 100%;
+  img.logo-img {
+    height: 50px;
+    padding-top: 20px;
+  }
   .brand {
     position: absolute;;
-    top: 25px;
-    left: 25px;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    margin: auto;
+    width: 180px;
     font-size: 30px;
     span {
       display: block;
@@ -16,8 +33,9 @@
       font-size: 15px;
     }
     .time-elapsed {
-      margin-top: 25px;
-      font-size: 15px;
+      margin-top: 10px;
+      font-size: 1.2em;
+      font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
     }
   }
   .veronica {
@@ -27,38 +45,98 @@
     right: 0;
     bottom: 0;
     margin: auto;
-    width: 250px;
-    height: 250px;
+    background-color: #dd4b39;
+    width: 300px;
+    height: 300px;
     text-align: center;
-    border: thin solid #ddd;
-    border-radius: 250px;
+    -webkit-animation: pulse 3s linear 0s infinite alternate;
+    -moz-animation: pulse 3s linear 0s infinite alternate;
+    -o-animation: pulse 3s linear 0s infinite alternate;
+    animation: pulse 3s linear 0s infinite alternate;
+    border-radius: 50%;
     .wrapper {
       width: 100%;
       height: 100%;
-      position: relative
+      position: relative;
     }
     .number {
       position: absolute;
       left: 0;
       top: 0;
       right: 0;
+      font-weight: 600;
       bottom: 0;
       margin: auto;
-      line-height: 72px;
-      font-size: 72px;
-      height: 72px;
+      color: #fff;
+      font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+      line-height: 1.75em;
+      font-size: 12em;
+      text-align: center;
     }
+  }
+
+  .veronica-shadow {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    width: 220px;
+    margin: auto;
+    height: 30px;
+    z-index: -1;
+    -webkit-filter: blur(7px);
+//    -webkit-animation: pulseAfter 2s ease-in-out 0s infinite alternate;
+//    -moz-animation: pulseAfter 2s ease-in-out 0s infinite alternate;
+//    -o-animation: pulseAfter 2s ease-in-out 0s infinite alternate;
+//    animation: pulseAfter 2s ease-in-out 0s infinite alternate;
+    filter: blur(7px);
+    left: 0;
+    bottom: 0;
+    right: 0;
   }
 
   .rules {
     position: absolute;
-    top: 25px;
-    right: 25px;
+    top: 15px;
+    right: 0;
     text-align: right;
+    h3 {
+      font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+      font-size: 1.5em;
+      font-weight: 300;
+    }
     ul {
       list-style: none;
       li {
-        margin-bottom: 15px;
+        margin-bottom: 8px;
+        border-radius: 5px 0 0 5px;
+        color: #fff;
+        background: #444;
+        font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+//        box-shadow: -10px 4px 23px rgba(0,0,0,0.3), -5px 3px 3px rgba(0,0,0,0.15);
+        padding: 5px 10px;
+        &.disabled {
+          color: #888;
+          background: #ddd;
+          text-decoration: line-through;
+        }
+      }
+    }
+  }
+  .lives {
+    position: absolute;
+    font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+    left: 80px;
+    line-height: 2.7em;
+    top: 20px;
+    p {
+      line-height: 1.5em;
+      margin: 5px 0;
+    }
+    .heart {
+      margin: 0 5px;
+      i {
+        font-size: 1.8em;
+        color: #dd4b39;
       }
     }
   }
@@ -83,5 +161,62 @@
       line-height: 75px;
 
     }
+  }
+}
+.veronica-cont {
+  position: absolute;
+  width: 300px;
+  height: 400px;
+  margin: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+//@-webkit-keyframes pulse {
+//  from {
+//    transform: translate3d(0,0,0);
+//  }
+//  to {
+//    transform: translate3d(0,-70px ,0);
+//  }
+//}
+
+//@-o-keyframes pulse {
+//  from {
+//    box-shadow: 0 0 20px rgba(153, 59, 59, 0.7);
+//  }
+//  to {
+//    box-shadow: 0 0 5px rgba(153, 59, 59, 0.7);
+//  }
+//
+//}
+//
+//@-moz-keyframes pulse {
+//  from {
+//    box-shadow: 0 0 20px rgba(153, 59, 59, 0.7);
+//  }
+//  to {
+//    box-shadow: 0 0 5px rgba(153, 59, 59, 0.7);
+//  }
+//
+//}
+//
+@keyframes pulse {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+@keyframes pulseAfter {
+  from {
+    transform: scaleX(1.0);
+    opacity: 1.0;
+  }
+  to {
+    transform: scaleX(0.4);
+    opacity: 0.6;
   }
 }
