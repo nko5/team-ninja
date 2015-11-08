@@ -5,6 +5,7 @@ angular.module('teamNinjaApp')
         var self = this;
         self.sections = [];
         self.sections.length = 24;
+        self.started = false;
         var timer;
         var join = function(){
             SocketIO.send(AppConstants.Events.JOIN, {gameId: $stateParams.id});
@@ -23,6 +24,11 @@ angular.module('teamNinjaApp')
                     callback: function () {
                         self.connected = true;
                         $timeout.cancel(timer);
+                    }
+                }, {
+                    name: AppConstants.Events.START,
+                    callback: function(){
+                        self.started = true;
                     }
                 }]);
                 join();

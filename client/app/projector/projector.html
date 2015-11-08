@@ -29,8 +29,15 @@
         <h3>Prizes Remaining</h3>
         <ul>
             <li data-ng-repeat="rule in projector.game.rules"
-                    data-ng-class="{'strike-through': rule.wonBy}">{{rule.name}}</li>
+                data-ng-class="{'strike-through': rule.wonBy}">{{rule.name}}
+            </li>
         </ul>
+    </div>
+
+    <div style="position: absolute; left: 25px; bottom:  25px;">
+        <btn class="btn btn-xs btn-primary">
+            <span class="glyphicon glyphicon-share" data-ng-click="projector.invite()"></span>
+        </btn>
     </div>
 
     <div class="players" style="text-align: center; position: absolute; bottom: 25px;width: 100%;">
