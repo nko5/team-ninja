@@ -244,6 +244,7 @@ exports.generateBoard = function (callback) {
                     tickets: board.slice(counter, counter + 3),
                     status: "UNUSED"
                 });
+                x++;
                 counter += 3;
                 cb();
             },
