@@ -137,6 +137,11 @@ angular.module('teamNinjaApp')
             self.reward.won = data.won;
             self.reward.user = data.user;
             self.reward.rules = data.rule;
+            findAndDisableRule(data.rule);
+            if(data.rule.identifier === "FH4") {
+                self.gameOver = true;
+                clearInterval();
+            }
             $timeout(function () {
                 self.wonGame = false;
             }, 5000);

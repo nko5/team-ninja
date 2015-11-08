@@ -6,6 +6,9 @@
   .section {
     width: 100%;
     height: 100%;
+    &.full-height {
+      height: auto;
+    }
     position: relative;
     text-align: center;
     &.intro-section {
@@ -59,14 +62,46 @@
     &.section-two {
       background-color: #673AB7;
     }
+    &.section-three {
+      background-color: #FFC107;
+    }
 
     .rules {
       padding-top: 8vh;
-      h1 {
+      color: #fff;
+      font-weight: 300;
+      ul {
+        text-align: left;
+      }
+      h1, h3 {
         color: #fff;
         padding: 10px 0;
         margin-bottom: 20px;
-        border-bottom: 1px solid #542eb7;
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+      }
+      h3 {
+        border-bottom: 0;
+      }
+    }
+
+    .about {
+      padding-top: 8vh;
+      .devs {
+        padding-top: 60px;
+      }
+      .dev {
+        display: inline-block;
+        margin: 0 10px;
+        img {
+          width: 250px;
+          border-radius: 50%;
+        }
+        h1 {
+          color: #333;
+          font-weight: 300;
+          font-size: 1.8em;
+          padding: 10px 0;
+        }
       }
     }
   }
