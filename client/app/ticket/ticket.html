@@ -1,15 +1,20 @@
 <div>
-    <div id="ticket-header">
-        <div class="logo">
-            <h1>Housie</h1>
-        </div>
+    <div ng-include="'components/navbar/navbar.html'"></div>
+
+    <div class="lives">
+        <p>Health</p>
+        <div class="heart"><i class="fa fa-heart"></i></div>
+        <div class="heart"><i class="fa fa-heart"></i></div>
+        <div class="heart"><i class="fa fa-heart-o"></i></div>
     </div>
 
     <div class="ticket-container">
         <div class="ticket">
-            <a href="#" class="num-section pull-left"
-               data-ng-class="{disabled: $index === 3}"
+            <a href="#" class="num-section"
                data-ng-repeat="section in ctrl.sections track by $index">
+                <span class="number">
+                    {{$index}}
+                </span>
             </a>
         </div>
     </div>
@@ -17,7 +22,7 @@
     <div class="footer ticket-footer">
         <div class="claim-area pull-left">
             <div class="claims-list">
-                <a href="#" data-toggle="dropdown">Claim</a>
+                <a href="javascript:void(0)" class="claim-btn" data-toggle="dropdown">Claim</a>
                 <ul class="bootstrap-dropdown">
                     <li data-ng-repeat="rule in ctrl.game.rules" data-ng-click="ctrl.fireClaim(rule)">
                         <a href="javascript:void(0)"> {{rule.name}} </a>
@@ -26,13 +31,11 @@
             </div>
         </div>
 
-        <div class="chat-area pull-left">
+        <div class="chat-area">
             <form data-ng-submit="ctrl.sendChat()">
-                <div class="chat-text pull-left">
-                    <input type="text" data-ng-model="ctrl.message"/>
-                </div>
-                <div class="send-btn pull-left">
-                    <button type="submit">send</button>
+                <div class="chat-text">
+                    <input type="text" data-ng-model="ctrl.message" class="hkv-textbox"/>
+                    <button type="submit" class="claim-btn send-chat pull-left"><i class="fa fa-paper-plane"></i></button>
                 </div>
             </form>
         </div>

@@ -8,22 +8,55 @@ body {
   }
 }
 
+.lives {
+  position: absolute;
+  font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+  left: 0;
+  right: 0;
+  margin: auto;
+  line-height: 2.7em;
+  top: 20px;
+  width: 120px;
+  text-align: center;
+  p {
+    line-height: 0.9em;
+    text-align: center;
+  }
+  .heart {
+    margin: 0 5px;
+    display: inline-block;
+    i {
+      font-size: 1.8em;
+      color: #dd4b39;
+    }
+  }
+}
+
 .ticket-container {
   .ticket {
     overflow: hidden;
-    max-width: 540px;
+    max-width: 780px;
+    text-align: center;
     margin: 0 auto;
     padding-top: 14vh;
     .num-section {
-      display: block;
+      display: inline-block;
       border: 1px solid #ccc;
       color: #000;
       font-weight: bold;
       margin: 2px;
       border-radius: 50%;
-      height: 60px;
-      width: 60px;
+      height: calc(100vw / 10);
+      width: calc(100vw / 10);
+      max-width: 80px;
+      max-height: 80px;
       position: relative;
+      transition: background 0.3s linear, color 0.2s linear;
+      &:hover {
+        color: #fff;
+        background-color: #dd4b39;
+        border: 1px solid #dd4b39;
+      }
       &.disabled {
         color: #ccc;
         transform: scale(0.8);
@@ -31,9 +64,10 @@ body {
         pointer-events: none;
       }
       .number {
+        font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
         width: 25px;
         height: 25px;
-        font-size: 1.3em;
+        font-size: 1.5em;
         position: absolute;
         text-align: center;
         left: 0;
@@ -47,26 +81,43 @@ body {
 }
 
 .ticket-footer {
+  width: 90%;
+  left: 0;
+  margin: 0 auto;
+  right: 0;
   position: absolute;
-  width: 100%;
   display: block;
   padding-bottom: 20px;
-  left: 0;
   bottom: 0;
+  .claim-area {
+    display: inline-block;
+  }
   .claims-list {
     position: relative;
+    display: inline-block;
     & > a {
       display: block;
       width: 150px;
       text-align: center;
-      padding: 5px 10px;
+      border: 1px solid #ccc;
+      background-color: #eee;
+      color: #333;
+      text-decoration: none;
+      border-radius: 5px 0 0 5px;
+      padding: 15px 10px;
+      transition: background 0.3s linear, color 0.2s linear;
+      &:hover {
+        background-color: #dd4b39;
+        color: #fff;
+      }
     }
     .bootstrap-dropdown {
       padding: 5px;
       border-radius: 5px;
-      bottom: 30px;
+      bottom: 41px;
       z-index: 101;
-      left: 10px;
+      left: 0;
+      background-color: #fff;
       box-shadow: 0 5px 20px rgba(0,0,0,0.15);
       position: absolute;
       width: 150px;
@@ -87,11 +138,45 @@ body {
           color: #333;
           border-radius: 3px;
           &:hover {
-            background-color: #07f;
+            background-color: #dd4b39;
             color: #fff;
           }
         }
       }
     }
+  }
+  .chat-area {
+    display: inline-block;
+    width: calc(100% - 160px);
+    .hkv-textbox {
+      width: 90%;
+      outline: none;
+      margin: 0 auto;
+      font-size: 1.4em;
+      float: left;
+      font-weight: 300;
+      font-family: "Roboto Slab", serif;
+      padding: 10px;
+      height: 51px;
+      border: 1px solid #ccc;
+    }
+  }
+}
+
+.send-chat {
+  display: block;
+  float: left;
+  width: 80px;
+  text-align: center;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  color: #333;
+  text-decoration: none;
+  border-radius: 0 5px 5px 0;
+  padding: 15px 10px;
+  transition: background 0.3s linear, color 0.2s linear;
+  &:hover {
+    background-color: #dd4b39;
+    color: #fff;
   }
 }

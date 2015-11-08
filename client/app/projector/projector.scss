@@ -122,24 +122,6 @@
       }
     }
   }
-  .lives {
-    position: absolute;
-    font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
-    left: 80px;
-    line-height: 2.7em;
-    top: 20px;
-    p {
-      line-height: 1.5em;
-      margin: 5px 0;
-    }
-    .heart {
-      margin: 0 5px;
-      i {
-        font-size: 1.8em;
-        color: #dd4b39;
-      }
-    }
-  }
   .players {
     text-align: center;
     position: absolute;

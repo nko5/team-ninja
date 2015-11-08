@@ -4,7 +4,7 @@ angular.module('teamNinjaApp')
     .controller('TicketCtrl', function (GameApi, AppConstants, SocketIO, Auth, $scope, $stateParams, $state, $timeout) {
         var self = this;
         self.sections = [];
-        self.sections.length = 24;
+        self.sections.length = 27;
         self.started = false;
         var timer;
         var join = function(){
@@ -49,6 +49,7 @@ angular.module('teamNinjaApp')
             var message = self.message && self.message.trim();
             if (message) {
                 SocketIO.send(AppConstants.Events.CHAT, {message: message, gameId: $stateParams.id});
+                self.message = "";
             }
         };
 

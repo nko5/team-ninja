@@ -224,7 +224,7 @@ module.exports = function (grunt) {
       target: {
         src: '<%= yeoman.client %>/home.html',
         ignorePath: '<%= yeoman.client %>/',
-        exclude: ['/json3/', '/es5-shim/', /bootstrap.css/, /font-awesome.css/ ]
+        exclude: [/bootstrap-sass-official/,/json3/, /es5-shim/, /bootstrap.css/, /font-awesome.css/ ]
       }
     },
 
