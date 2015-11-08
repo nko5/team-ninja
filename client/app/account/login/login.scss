@@ -16,15 +16,58 @@ $btnGithubBackgroundHighlight:      #ccc;
 // Social buttons
 // --------------------------------------------------
 
-.btn-facebook {
-  @include button-variant($btnText, $btnFacebookBackgroundHighlight, $btnFacebookBackgroundHighlight);
-}
-.btn-twitter {
-  @include button-variant($btnText, $btnTwitterBackground, $btnTwitterBackgroundHighlight);
-}
-.btn-google-plus {
-  @include button-variant($btnText, $btnGooglePlusBackground, $btnGooglePlusBackgroundHighlight);
-}
-.btn-github {
-  @include button-variant($btnTextAlt, $btnGithubBackground, $btnGithubBackgroundHighlight);
+.login {
+  text-align: center;
+  h1 {
+    font-family: 'Roboto Slab', serif;
+    font-weight: 300;
+    color: #444;
+    font-size: 4em;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 30px;
+  }
+  .social-login {
+    padding-top: 20vh;
+    a {
+      display: inline-block;
+      width: 100px;
+      margin: 10px;
+      height: 100px;
+      transition: transform 0.2s linear, background 0.3s linear, color 0.2s linear;
+      transform: scale(0.9);
+      text-align: center;
+      border-radius: 50%;
+      &.btn-facebook {
+        border: 2px solid #3B5998;
+        color: #3B5998;
+        &:hover {
+          background-color: #3B5998;
+          color: #fff;
+        }
+      }
+      &.btn-google-plus {
+        border: 2px solid #dd4b39;
+        color: #dd4b39;
+        &:hover {
+          background-color: #dd4b39;
+        }
+      }
+      &.btn-twitter {
+        border: 2px solid #2daddc;
+        color: #2daddc;
+        &:hover {
+          background-color: #2daddc;
+        }
+      }
+      &:hover {
+        transform: scale(1.0);
+        color: #fff;
+      }
+      i {
+        font-size: 2.5em;
+        line-height: 2.5em;
+      }
+    }
+  }
 }
