@@ -1,0 +1,76 @@
+.homepage {
+  width: 100%;
+  background-color: #eee;
+  height: 100%;
+  font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+  .section {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    &.intro-section {
+      background-color: #F44336;
+      padding-top: 10vh;
+    }
+    .intro {
+      height: 350px;
+      width: 350px;
+      border-radius: 50%;
+      padding-top: 50px;
+      box-shadow: 0 2px 25px rgba(0,0,0,0.15);
+      background-color: #fff;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      .logo-img {
+        height: 120px;
+      }
+      .copy {
+        h1 {
+          font-weight: 300;
+          font-size: 5em;
+        }
+        p {
+          font-size: 1.2em;
+          color: #888;
+        }
+      }
+    }
+    .play-btn {
+      width: 350px;
+      left: 0;
+      font-size: 2em;
+      right: 0;
+      border: 2px solid #fff;
+      padding: 20px;
+      margin: 30px auto;
+      cursor: pointer;
+      border-radius: 10px;
+      color: #fff;
+      transition: background 0.3s linear, color 0.2s linear;
+      &:hover {
+        background-color: #fff;
+        color: #F44336;
+      }
+    }
+    .vote-btn {
+      margin: 0 auto;
+    }
+    &.section-two {
+      background-color: #673AB7;
+    }
+
+    .rules {
+      padding-top: 8vh;
+      h1 {
+        color: #fff;
+        padding: 10px 0;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #542eb7;
+      }
+    }
+  }
+}
+h1 {
+  margin: 0;
+}
