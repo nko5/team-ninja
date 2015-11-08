@@ -8,9 +8,36 @@ angular.module('teamNinjaApp')
 
         $scope.getCurrentUser = Auth.getCurrentUser;
 
-        GameApi.get({id: $stateParams.id}, function (data) {
-            self.game = data;
-        });
+        var init = function(){
+            GameApi.get({id: $stateParams.id}, function (data) {
+                self.game = data;
+            });
+        };
+
+        if(false){
+            init = function(){
+                GameApi.list({}, function (data) {
+                    self.game = data.games[0];
+                });
+            };
+        }
+
+        var displayMessage = function(player, message, duration){
+            player.message = message;
+            $timeout(function(){
+                if(player.message == message){
+                    player.message = "";
+                }
+            }, duration);
+        };
+
+        var findAndDisableRule = function (rule) {
+            self.game.rules.forEach(function(item, index){
+                if(item._id == rule._id){
+                    item.wonBy = true;
+                }
+            });
+        };
 
         var promise;
 
@@ -34,27 +61,6 @@ angular.module('teamNinjaApp')
             });
         };
 
-        $scope.sendInvite = function (user) {
-            if (user) {
-                User.invitePlayer({
-                    sender: user.email,
-                    receiver: $scope.inviteEmail,
-                    gameId: self.game._id
-                }, function (result) {
-                    $scope.showMessage = true;
-                    if (result.sent) {
-                        $scope.alertMessage = "Invite sent successfully.";
-                    }
-                    else {
-                        $scope.alertMessage = "Error sending invite. Please try again later.";
-                    }
-                    $timeout(function () {
-                        $scope.showMessage = false;
-                    }, 3000);
-                });
-            }
-        };
-
         $scope.$on("socket:" + AppConstants.Events.CHAT, function (evt, data) {
             console.log(data);
             var userToUpdate;
@@ -66,13 +72,7 @@ angular.module('teamNinjaApp')
             }
 
             if(userToUpdate) {
-                userToUpdate.message = data.message;
-                $timeout(function () {
-                    if (data.message == userToUpdate.message) {
-                        userToUpdate.message = "";
-                    }
-                    userToUpdate.message = "";
-                }, 2000);
+                displayMessage(userToUpdate, "Bye Bye!", 2000);
             }
         });
 
@@ -86,15 +86,12 @@ angular.module('teamNinjaApp')
             }
 
             if(userToUpdate) {
-                userToUpdate.message = data.rule.name;
-                $timeout(function () {
-                    if (data.rule.name == userToUpdate.message) {
-                        userToUpdate.message = "";
-                    }
-                }, 2000);
+                findAndDisableRule(data.rule);
+                displayMessage(userToUpdate, data.rule.name, 2000);
             }
 
         });
+
         $scope.$on("socket:" + AppConstants.Events.JOIN, function (evt, data) {
             var isNewUser = true;
             for(var i = 0; i < self.game.players.length; i++) {
@@ -125,4 +122,28 @@ angular.module('teamNinjaApp')
             socket.removeAllListeners("CLAIM");
             socket.removeAllListeners("CHAT");
         });
+
+        $scope.sendInvite = function (user) {
+            console.log(user);
+            if (user) {
+                User.invitePlayer({
+                    sender: user.email,
+                    receiver: $scope.inviteEmail,
+                    gameId: self.game._id
+                }, function (result) {
+                    $scope.showMessage = true;
+                    if (result.sent) {
+                        $scope.alertMessage = "Invite sent successfully.";
+                    }
+                    else {
+                        $scope.alertMessage = "Error sending invite. Please try again later.";
+                    }
+                    $timeout(function () {
+                        $scope.showMessage = false;
+                    }, 3000);
+                });
+            }
+        };
+
+        init();
     });
