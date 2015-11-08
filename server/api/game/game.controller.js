@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Game = require('./game.model');
+var async = require("async");
 var Number = require('../number/number.model');
 
 // Get list of games
@@ -80,12 +81,15 @@ exports.show = function (req, res) {
 exports.create = function (req, res) {
     req.body.dateCreated = +new Date();
 
-  new Game(req.body).save(function (err, game) {
-    if (err) {
-      return handleError(res, err);
-    }
-    return res.status(201).json(game);
-  });
+    exports.generateBoard(function (tickets) {
+        req.body.tickets = tickets;
+        new Game(req.body).save(function (err, game) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.status(201).json(game);
+        });
+    });
 };
 
 // Updates an existing game in the DB.
@@ -164,16 +168,104 @@ exports.addPlayer = function (req, res) {
   }
 };
 
-exports.generateBoard = function () {
-    var board = [];
-    for(var i = 0; i < 27; i++) {
-        var num = Math.round(Math.random() * 100),
-            modulus = Math.round(Math.random() * 10);
-        if(num % modulus === 0) {
-            board.push("");
-        } else {
-            board.push(num);
+exports.generateBoard = function (callback) {
+    var board = [],
+        tasks = [],
+        blanks = [],
+        rowsPerTicket = 3,
+        batchCount = 6,
+        columnsPerTicket = 9,
+        blankSpacesPerRow = 4,
+        minValue = 1,
+        maxValue = 89,
+        num, column, modulus;
+
+    tasks.push(function (oCB) {
+        var k = 0;
+        async.whilst(
+            function () { return k < (batchCount * rowsPerTicket); },
+            function (cb) { blanks[k] = 0; k++; cb(); },
+            function () {
+                oCB();
+            }
+        )
+    });
+
+    tasks.push(function (oCB) {
+        var v = {i: 1};
+        async.whilst(
+            function() { return v.i < maxValue; },
+            function(cb) {
+                findRow(v, board, batchCount, rowsPerTicket, blanks, function() {
+                    v.i++;
+                    cb();
+                }, 0);
+            },
+            function() {
+                oCB(null, board);
+            }
+        );
+    });
+
+    tasks.push(function (oCB) {
+
+    });
+
+    async.series(tasks, function (err, resp) {
+        if(err) {
+            console.log("Error generating board", err);
+            return callback([]);
         }
-    }
-    return board;
+        var board = resp[1],
+            x = 0,
+            tickets = [],
+            counter = 0;
+
+        async.whilst(
+            function() { return x < 6; },
+            function(cb) {
+                tickets.push({
+                    tickets: board.slice(counter, counter + 3),
+                    status: "UNUSED"
+                });
+                counter += 3;
+                cb();
+            },
+            function() {
+                return callback(tickets);
+            }
+        );
+    });
 };
+
+function findRow(v, board, batchCount, rowsPerTicket, blanks, cb, iter) {
+    var modulus = Math.floor(Math.random() * (batchCount * rowsPerTicket));
+    var column = Math.floor(v.i / 10);
+
+    if(!(board[modulus] && board[modulus].length)) {
+        board[modulus] = [];
+        board[modulus].length = (batchCount * rowsPerTicket);
+    }
+
+    if(typeof board[modulus][column] !== "undefined") {
+        setImmediate(function () {
+            if(iter >= 500) {
+                console.log(v.i);
+                v.i++;
+            }
+            return findRow(v, board, batchCount, rowsPerTicket, blanks, cb, ++iter);
+        });
+    } else if(blanks[modulus] > 4) {
+        setImmediate(function () {
+            if(iter >= 500) {
+                console.log(v.i);
+                v.i++;
+            }
+            return findRow(v, board, batchCount, rowsPerTicket, blanks, cb, ++iter);
+        });
+    } else {
+        board[modulus][column] = v.i;
+        blanks[modulus]++;
+        return cb();
+    }
+}
