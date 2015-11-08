@@ -29,24 +29,31 @@ var createGame = function (users, rules) {
 var createRules = function (cb) {
     Rule.create({
         name: "Full House 1",
+        identifier: "FH1",
         description: "To win this title walk 600 KMs on your knees."
     }, {
         name: "Full House 2",
+        identifier: "FH2",
         description: "To win this title walk 600 KMs on your knees."
     }, {
         name: "Full House 3",
+        identifier: "FH3",
         description: "To win this title walk 600 KMs on your knees."
     }, {
         name: "Full House 4",
+        identifier: "FH4",
         description: "To win this title walk 600 KMs on your knees."
     }, {
         name: "Top Lane",
+        identifier: "TL",
         description: "To win this title walk 600 KMs on your knees."
     }, {
         name: "Middle Lane",
+        identifier: "ML",
         description: "To win this title walk 600 KMs on your knees."
     }, {
         name: "Bottom Lane",
+        identifier: "BL",
         description: "To win this title walk 600 KMs on your knees."
     }, function (err) {
         console.log("Created rules");

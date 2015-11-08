@@ -52,6 +52,11 @@ body {
       max-height: 80px;
       position: relative;
       transition: background 0.3s linear, color 0.2s linear;
+      &.marked{
+        color: #fff;
+        background-color: #dd4b39;
+        border: 1px solid #dd4b39;
+      }
       &:hover {
         color: #fff;
         background-color: #dd4b39;
@@ -115,7 +120,7 @@ body {
       padding: 5px;
       border-radius: 5px;
       bottom: 41px;
-      z-index: 101;
+      z-index: 1001;
       left: 0;
       background-color: #fff;
       box-shadow: 0 5px 20px rgba(0,0,0,0.15);

@@ -3,6 +3,7 @@
 
     <div class="lives">
         <p>Health</p>
+
         <div class="heart"><i class="fa fa-heart"></i></div>
         <div class="heart"><i class="fa fa-heart"></i></div>
         <div class="heart"><i class="fa fa-heart-o"></i></div>
@@ -10,12 +11,16 @@
 
     <div class="ticket-container">
         <div class="ticket">
-            <a href="#" class="num-section"
-               data-ng-repeat="section in ctrl.sections track by $index">
+            <div data-ng-repeat="row in ctrl.ticket.board track by $index">
+                <a href="#" class="num-section"
+                   data-ng-click="item && ctrl.toggle(item)"
+                   data-ng-class="{marked: ctrl.selected[item]}"
+                   data-ng-repeat="item in row track by $index">
                 <span class="number">
-                    {{$index}}
+                    {{item}}
                 </span>
-            </a>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -35,7 +40,8 @@
             <form data-ng-submit="ctrl.sendChat()">
                 <div class="chat-text">
                     <input type="text" data-ng-model="ctrl.message" class="hkv-textbox"/>
-                    <button type="submit" class="claim-btn send-chat pull-left"><i class="fa fa-paper-plane"></i></button>
+                    <button type="submit" class="claim-btn send-chat pull-left"><i class="fa fa-paper-plane"></i>
+                    </button>
                 </div>
             </form>
         </div>
