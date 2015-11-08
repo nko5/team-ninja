@@ -39,6 +39,18 @@
     }
   }
   .veronica {
+    &.start{
+      cursor: auto;
+      -webkit-animation: pulse 3s linear 3s infinite alternate;
+      -moz-animation: pulse 3s linear 3s infinite alternate;
+      -o-animation: pulse 3s linear 3s infinite alternate;
+      animation: pulse 3s linear 3s infinite alternate;
+    }
+    .number.play{
+      font-size: 9em;
+      line-height: 2.35em;
+    }
+    cursor: pointer;
     position: absolute;
     left: 0;
     top: 0;
@@ -49,10 +61,6 @@
     width: 300px;
     height: 300px;
     text-align: center;
-    -webkit-animation: pulse 3s linear 3s infinite alternate;
-    -moz-animation: pulse 3s linear 3s infinite alternate;
-    -o-animation: pulse 3s linear 3s infinite alternate;
-    animation: pulse 3s linear 3s infinite alternate;
     border-radius: 50%;
     .wrapper {
       width: 100%;
@@ -68,7 +76,9 @@
       bottom: 0;
       margin: auto;
       color: #fff;
-      font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+      &.roboto{
+        font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+      }
       line-height: 1.75em;
       font-size: 12em;
       text-align: center;

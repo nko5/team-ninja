@@ -5,6 +5,7 @@ angular.module('teamNinjaApp')
         var self = this;
         var veronica = new SpeechSynthesisUtterance("");
         var voiceArr = speechSynthesis.getVoices();
+        veronica.rate = 0.8;
         veronica.lang = 'en-US';
 
         console.log(veronica.voice);

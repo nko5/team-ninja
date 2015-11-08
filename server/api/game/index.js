@@ -13,6 +13,7 @@ router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
-router.post('/addPlayer', controller.addPlayer);
+router.post('/addPlayer', auth.isAuthenticated(), controller.addPlayer);
+router.post('/:id/claim', auth.isAuthenticated(), controller.claim);
 
 module.exports = router;

@@ -55,8 +55,14 @@ module.exports = function (socketio) {
         socket.on(Constants.Events.ACKNOWLEDGE, function (data) {
             if (socket.gameId) {
                 socket.broadcast.to(data.userId).emit(Constants.Events.ACKNOWLEDGE, {
-                    source: currentUser
+                    ack: true
                 });
+            }
+        });
+
+        socket.on(Constants.Events.REWARD, function (data) {
+            if (socket.gameId) {
+                socket.broadcast.to(data.userId).emit(Constants.Events.REWARD, data);
             }
         });
 
@@ -70,6 +76,7 @@ module.exports = function (socketio) {
 
         socket.on(Constants.Events.CLAIM, function (data) {
             if (socket.gameId) {
+                console.log("Received Claim from",data);
                 socket.broadcast.to(socket.gameId).emit(Constants.Events.CLAIM, {
                     source: currentUser,
                     rule: data.rule

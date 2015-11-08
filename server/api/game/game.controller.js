@@ -5,6 +5,8 @@ var Game = require('./game.model');
 var async = require("async");
 var Number = require('../number/number.model');
 var Rule = require('../rule/rule.model');
+var Ticket = require('../ticket/ticket.model');
+var lodash = require('lodash');
 
 // Get list of games
 exports.index = function (req, res) {
@@ -89,16 +91,26 @@ exports.create = function (req, res) {
         if (err) {
             return handleError(res, err);
         }
-
-        exports.generateBoard(function (tickets) {
+        Ticket.findOne({used: false}, function (err, board) {
+            if (err) {
+                return handleError(res, err);
+            }
+            board.used = true;
+            board.save();
             var game = new Game({
                 host: user,
                 players: [user],
-                tickets: tickets,
+                tickets: board.tickets.map(function (ticket) {
+                    return {
+                        board: ticket,
+                        status: false
+                    }
+                }),
                 rules: rules.map(function (item) {
                     return {
                         id: item._id,
-                        name: item.name
+                        name: item.name,
+                        identifier: item.identifier
                     }
                 })
             });
@@ -156,34 +168,126 @@ function handleError(res, err) {
     return res.status(500).send(err);
 }
 
-// Add player to a game
+var findTicket = function (game, userId) {
+    var userTicket;
+    for (var i = 0; i < game.tickets.length; i++) {
+        var ticket = game.tickets[i];
+        if (ticket.userId && ticket.userId.toString() == userId.toString()) {
+            userTicket = ticket;
+            break;
+        }
+    }
+    return ticket;
+}
+
+var checkFullHouse = function (ticket, game, selected) {
+    var result = false;
+    var flatTicket = _.flatten(ticket.board).filter(function (val) {
+        return val != null;
+    });
+    var i1 = lodash.intersect(selected, flatTicket);
+    var i2 = lodash.intersect(selected, game.calledNumbers);
+    if (i1.length == i2.length && i1.length == flatTicket.length) {
+        result = true;
+    }
+    return result;
+
+};
+
+var checkLane = function (lane, game, selected) {
+    var flatTicket = _.flatten(ticket.board).filter(function (val) {
+        return val != null;
+    });
+    var i1 = lodash.intersect(selected, lane);
+    var i2 = lodash.intersect(selected, game.calledNumbers);
+    return i1.length == i2.length && i1.length == lane.length;
+};
+
+var checkRule = function (rule, user, game, selected) {
+    var ticket = findTicket(game, user._id || user.id);
+    var result = false;
+    switch (rule.identifier) {
+        case "FH1":
+            result = checkFullHouse(ticket, game, selected);
+            break;
+        case "FH2":
+            result = checkFullHouse(ticket, game, selected);
+            break;
+        case "FH3":
+            result = checkFullHouse(ticket, game, selected);
+            break;
+        case "FH4":
+            result = checkFullHouse(ticket, game, selected);
+            break;
+        case "TL":
+            result = checkLane(ticket.board[0], game, selected);
+            break;
+        case "ML":
+            result = checkLane(ticket.board[1], game, selected);
+            break;
+        case "BL":
+            result = checkLane(ticket.board[2], game, selected);
+            break;
+        default :
+            break;
+    }
+    return result;
+};
+
+exports.claim = function (req, res) {
+    Game.findById(req.params.id, function (err, game) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!game) {
+            return res.status(404).send('Not Found');
+        }
+        var result = checkRule(req.body.rule, req.user, game, req.body.selected);
+        return res.json({won: result});
+    });
+};
+
 exports.addPlayer = function (req, res) {
     var player = {
-        id: req.body._id,
-        name: req.body.name,
-        picture: req.body.picture
+        id: req.user._id,
+        name: req.user.name,
+        picture: req.user.picture
     };
     if (req.body.gameId) {
         Game.findById(req.body.gameId, function (err, game) {
             if (err) {
                 return handleError(res, err);
             }
-            else {
-                Game.update(
-                    {_id: req.body.gameId},
-                    {$addToSet: {players: player}}, function (err, game) {
-                        if (err) {
-                            return res.json({
-                                updated: false
-                            });
-                        }
-                        else {
-                            return res.json({
-                                updated: true
-                            });
-                        }
-                    });
+            var alreadyAdded = false;
+            for (var i = 0; i < game.players.length; i++) {
+                if (game.players.id.toString() == player.id) {
+                    alreadyAdded = true;
+                    break
+                }
             }
+            if (alreadyAdded) {
+                game.players.push(player);
+            }
+            var freeTicket;
+            var ownedTicket = null;
+            for (var i = 0; i < game.tickets.length; i++) {
+                var ticket = game.tickets[i];
+                if (!ticket.userId) {
+                    freeTicket = ticket;
+                }
+                if (ticket.userId && ticket.userId.toString() == player.id) {
+                    ownedTicket = ticket;
+                }
+            }
+            if (!ownedTicket) {
+                freeTicket.userId = player.id;
+            }
+            game.save(function (err, game) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                res.json({updated: true});
+            });
         });
     }
 };
@@ -203,8 +307,14 @@ exports.generateBoard = function (callback) {
     tasks.push(function (oCB) {
         var k = 0;
         async.whilst(
-            function () { return k < (batchCount * rowsPerTicket); },
-            function (cb) { blanks[k] = 0; k++; cb(); },
+            function () {
+                return k < (batchCount * rowsPerTicket);
+            },
+            function (cb) {
+                blanks[k] = 0;
+                k++;
+                cb();
+            },
             function () {
                 oCB();
             }
@@ -214,21 +324,23 @@ exports.generateBoard = function (callback) {
     tasks.push(function (oCB) {
         var v = {i: 1};
         async.whilst(
-            function() { return v.i < maxValue; },
-            function(cb) {
-                findRow(v, board, batchCount, rowsPerTicket, blanks, function() {
+            function () {
+                return v.i < maxValue;
+            },
+            function (cb) {
+                findRow(v, board, batchCount, rowsPerTicket, blanks, function () {
                     v.i++;
                     cb();
                 }, 0);
             },
-            function() {
+            function () {
                 oCB(null, board);
             }
         );
     });
 
     async.series(tasks, function (err, resp) {
-        if(err) {
+        if (err) {
             console.log("Error generating board", err);
             return callback([]);
         }
@@ -238,8 +350,10 @@ exports.generateBoard = function (callback) {
             counter = 0;
 
         async.whilst(
-            function() { return x < 6; },
-            function(cb) {
+            function () {
+                return x < 6;
+            },
+            function (cb) {
                 tickets.push({
                     tickets: board.slice(counter, counter + 3),
                     status: "UNUSED"
@@ -248,7 +362,7 @@ exports.generateBoard = function (callback) {
                 counter += 3;
                 cb();
             },
-            function() {
+            function () {
                 return callback(tickets);
             }
         );
@@ -259,22 +373,22 @@ function findRow(v, board, batchCount, rowsPerTicket, blanks, cb, iter) {
     var modulus = Math.floor(Math.random() * (batchCount * rowsPerTicket));
     var column = Math.floor(v.i / 10);
 
-    if(!(board[modulus] && board[modulus].length)) {
+    if (!(board[modulus] && board[modulus].length)) {
         board[modulus] = [];
         board[modulus].length = (batchCount * rowsPerTicket);
     }
 
-    if(typeof board[modulus][column] !== "undefined") {
+    if (typeof board[modulus][column] !== "undefined") {
         setImmediate(function () {
-            if(iter >= 500) {
+            if (iter >= 500) {
                 console.log(v.i);
                 v.i++;
             }
             return findRow(v, board, batchCount, rowsPerTicket, blanks, cb, ++iter);
         });
-    } else if(blanks[modulus] > 4) {
+    } else if (blanks[modulus] > 4) {
         setImmediate(function () {
-            if(iter >= 500) {
+            if (iter >= 500) {
                 console.log(v.i);
                 v.i++;
             }

@@ -8,6 +8,7 @@ angular.module('teamNinjaApp')
             JOIN: "JOIN",
             LEAVE: "LEAVE",
             ACKNOWLEDGE: "ACKNOWLEDGE",
-            START: "START"
+            START: "START",
+            REWARD: "REWARD"
         }
     });
