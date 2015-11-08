@@ -8,15 +8,26 @@ angular.module('teamNinjaApp')
             ioSocket;
 
         self.socket = null;
+        var queue = [];
 
         self.send = function (event, data) {
             socket.emit(event, data);
         };
 
-        self.bindAll = function (events) {
+        var _bindAll = function (events) {
             events.forEach(function (event) {
                 socket.on(event.name, event.callback);
             });
+        };
+
+        self.bindAll = function (events) {
+            if (!socket) {
+                queue.push(function () {
+                    _bindAll(events);
+                })
+            } else {
+                _bindAll(events);
+            }
         };
 
         self.unbindAll = function (events) {
@@ -35,12 +46,16 @@ angular.module('teamNinjaApp')
                 ioSocket: ioSocket
             });
             self.socket = socket;
+            queue.forEach(function (cb) {
+                cb();
+            });
         };
 
         Auth.isLoggedInAsync(function (isLoggedIn) {
-            if (user) {
+            if (isLoggedIn) {
                 connect();
             }
         });
+        return self;
 
     });

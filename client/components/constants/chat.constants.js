@@ -6,6 +6,7 @@ angular.module('teamNinjaApp')
             CHAT: "CHAT",
             CLAIM: "CLAIM",
             JOIN: "JOIN",
-            LEAVE: "LEAVE"
+            LEAVE: "LEAVE",
+            ACKNOWLEDGE: "ACKNOWLEDGE"
         }
     });

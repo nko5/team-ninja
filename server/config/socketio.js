@@ -29,28 +29,40 @@ module.exports = function (socketio) {
         socket.on(Constants.Events.JOIN, function (data) {
             Game.findById(data.gameId, function (err, game) {
                 if (game && game.hasPlayer(currentUser)) {
-                    socket.join(socket.gameId);
-                    socket.broadcast.to(socket.gameId).emit(Constants.Events.JOIN, 'SERVER', {
+                    if(!socket.gameId){
+                        socket.gameId = data.gameId;
+                        socket.join(data.gameId);
+                        socket.join(currentUser._id);
+                    }
+                    socket.to(data.gameId).emit(Constants.Events.JOIN, {
                         source: currentUser
                     });
                 } else {
-
+                    console.log("No Game");
                 }
             })
         });
 
         socket.on(Constants.Events.CHAT, function (data) {
             if (socket.gameId) {
-                socket.broadcast.to(socket.gameId).emit(Constants.Events.CHAT, 'SERVER', {
+                socket.broadcast.to(socket.gameId).emit(Constants.Events.CHAT, {
                     source: currentUser,
                     message: data.message
                 });
             }
         });
 
+        socket.on(Constants.Events.ACKNOWLEDGE, function (data) {
+            if (socket.gameId) {
+                socket.broadcast.to(data.userId).emit(Constants.Events.ACKNOWLEDGE, {
+                    source: currentUser
+                });
+            }
+        });
+
         socket.on(Constants.Events.LEAVE, function (data) {
             if (socket.gameId) {
-                socket.broadcast.to(socket.gameId).emit(Constants.Events.LEAVE, 'SERVER', {
+                socket.broadcast.to(socket.gameId).emit(Constants.Events.LEAVE, {
                     source: currentUser
                 });
             }
@@ -58,7 +70,7 @@ module.exports = function (socketio) {
 
         socket.on(Constants.Events.CLAIM, function (data) {
             if (socket.gameId) {
-                socket.broadcast.to(socket.gameId).emit(Constants.Events.CLAIM, 'SERVER', {
+                socket.broadcast.to(socket.gameId).emit(Constants.Events.CLAIM, {
                     source: currentUser,
                     rule: data.rule
                 });
@@ -67,7 +79,7 @@ module.exports = function (socketio) {
 
         socket.on('disconnect', function () {
             if (socket.gameId) {
-                socket.broadcast.to(socket.gameId).emit(Constants.Events.LEAVE, 'SERVER', {
+                socket.broadcast.to(socket.gameId).emit(Constants.Events.LEAVE, {
                     source: currentUser
                 });
             }

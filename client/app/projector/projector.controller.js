@@ -7,10 +7,11 @@ angular.module('teamNinjaApp')
         $scope.showMessage = false;
         $scope.getCurrentUser = Auth.getCurrentUser;
         self.number = null;
-
+        self.connectedPlayers = [];
         var init = function () {
             GameApi.get({id: $stateParams.id}, function (data) {
                 self.game = data;
+                SocketIO.send(AppConstants.Events.JOIN, {gameId: $stateParams.id});
             });
         };
 
@@ -20,7 +21,7 @@ angular.module('teamNinjaApp')
                 if (player.message == message) {
                     player.message = "";
                 }
-                cb();
+                cb && cb();
             }, duration);
         };
 
@@ -43,7 +44,7 @@ angular.module('teamNinjaApp')
         var findUser = function (id) {
             var user = null;
 
-            self.game.players.forEach(function (player, index) {
+            self.connectedPlayers.forEach(function (player, index) {
                 if (player.id == id) {
                     user = {
                         obj: player,
@@ -69,13 +70,13 @@ angular.module('teamNinjaApp')
             });
         };
 
-        var showMessage = function (event, data) {
+        var showMessage = function (data) {
             var user = findUser(data.source._id);
             if (user) {
                 displayMessage(user.obj, data.message, 2000);
             }
         };
-        var disablePrize = function (event, data) {
+        var disablePrize = function (data) {
             var user = findUser(data.source._id);
             if (user) {
                 findAndDisableRule(data.rule);
@@ -83,22 +84,23 @@ angular.module('teamNinjaApp')
             }
         };
 
-        var addUser = function (event, data) {
+        var addUser = function (data) {
             var user = findUser(data.source._id);
             if (!user) {
-                self.game.players.push({
+                self.connectedPlayers.push({
                     id: data.source._id,
                     name: data.source.name,
                     picture: data.source.picture
                 });
             }
+            SocketIO.send(Events.ACKNOWLEDGE, {userId: data.source._id})
         };
 
-        var removeUser = function (event, data) {
+        var removeUser = function (data) {
             var user = findUser(data.source._id);
             if (user) {
                 displayMessage(user.obj, "Bye Bye!", 1000, function () {
-                    self.game.players.splice(user.index, 1);
+                    self.connectedPlayers.splice(user.index, 1);
                 });
             }
         };
@@ -122,7 +124,8 @@ angular.module('teamNinjaApp')
                 Events.CHAT,
                 Events.CLAIM,
                 Events.LEAVE,
-                Events.JOIN
+                Events.JOIN,
+                Events.ACKNOWLEDGE
             ])
         });
 

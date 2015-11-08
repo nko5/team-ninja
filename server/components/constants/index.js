@@ -5,6 +5,7 @@ module.exports = {
         CHAT: "CHAT",
         CLAIM: "CLAIM",
         JOIN: "JOIN",
-        LEAVE: "LEAVE"
+        LEAVE: "LEAVE",
+        ACKNOWLEDGE: "ACKNOWLEDGE"
     }
 };
