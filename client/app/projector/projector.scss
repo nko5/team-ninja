@@ -10,11 +10,19 @@
     height: 50px;
     padding-top: 20px;
   }
+  .sharecode {
+    padding: 10px 0;
+    margin: 10px;
+    font-size: 1.4em;
+    strong {
+      background-color: #eee;
+      font-family: monospace;
+    }
+  }
   .brand {
     position: absolute;;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 70px;
+    left: 10px;
     border-radius: 0 0 5px 5px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     text-align: center;
