@@ -130,5 +130,26 @@ angular.module('teamNinjaApp')
             ])
         });
 
+        $scope.sendInvite = function (user) {
+            console.log(user);
+            if (user) {
+                User.invitePlayer({
+                    sender: user.email,
+                    receiver: $scope.inviteEmail,
+                    gameId: self.game._id
+                }, function (result) {
+                    $scope.showMessage = true;
+                    if (result.sent) {
+                        $scope.alertMessage = "Invite sent successfully.";
+                    }
+                    else {
+                        $scope.alertMessage = "Error sending invite. Please try again later.";
+                    }
+                    $timeout(function () {
+                        $scope.showMessage = false;
+                    }, 3000);
+                });
+            }
+        };
         init();
     });
