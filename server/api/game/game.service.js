@@ -83,8 +83,12 @@ var checkRule = function (rule, user, game, selected) {
     if (result == false) {
         ticket.health--;
     } else {
-        var r = findRule(game, rule.identifier)
-        r.wonBy = user._id || user.id;
+        var r = findRule(game, rule.identifier);
+        if (r.wonBy) {
+            result = false;
+        } else {
+            r.wonBy = user._id || user.id;
+        }
     }
     return result;
 };
