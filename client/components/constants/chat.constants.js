@@ -7,6 +7,7 @@ angular.module('teamNinjaApp')
             CLAIM: "CLAIM",
             JOIN: "JOIN",
             LEAVE: "LEAVE",
-            ACKNOWLEDGE: "ACKNOWLEDGE"
+            ACKNOWLEDGE: "ACKNOWLEDGE",
+            START: "START"
         }
     });

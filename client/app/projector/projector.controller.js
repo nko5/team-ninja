@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('teamNinjaApp')
-    .controller('ProjectorCtrl', function (Veronica, GameApi, $interval, $scope, AppConstants, SocketIO, User, Auth, $timeout, $stateParams) {
+    .controller('ProjectorCtrl', function (Veronica, GameApi, $interval, $scope, AppConstants, SocketIO, User, Auth, $timeout, $stateParams, PopupService) {
         var self = this;
         var Events = AppConstants.Events;
         $scope.showMessage = false;
         $scope.getCurrentUser = Auth.getCurrentUser;
         self.number = null;
         self.connectedPlayers = [];
+        self.invite = PopupService.invite;
         var init = function () {
             GameApi.get({id: $stateParams.id}, function (data) {
                 self.game = data;
@@ -128,28 +129,6 @@ angular.module('teamNinjaApp')
                 Events.ACKNOWLEDGE
             ])
         });
-
-        $scope.sendInvite = function (user) {
-            console.log(user);
-            if (user) {
-                User.invitePlayer({
-                    sender: user.email,
-                    receiver: $scope.inviteEmail,
-                    gameId: self.game._id
-                }, function (result) {
-                    $scope.showMessage = true;
-                    if (result.sent) {
-                        $scope.alertMessage = "Invite sent successfully.";
-                    }
-                    else {
-                        $scope.alertMessage = "Error sending invite. Please try again later.";
-                    }
-                    $timeout(function () {
-                        $scope.showMessage = false;
-                    }, 3000);
-                });
-            }
-        };
 
         init();
     });

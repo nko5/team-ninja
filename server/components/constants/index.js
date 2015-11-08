@@ -6,6 +6,7 @@ module.exports = {
         CLAIM: "CLAIM",
         JOIN: "JOIN",
         LEAVE: "LEAVE",
-        ACKNOWLEDGE: "ACKNOWLEDGE"
+        ACKNOWLEDGE: "ACKNOWLEDGE",
+        START: "START"
     }
 };
