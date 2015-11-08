@@ -185,3 +185,99 @@ body {
     color: #fff;
   }
 }
+
+.win-screen {
+  font-family: "Roboto Slab", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  animation: zoomIn 0.8s ease-in;
+  text-align: center;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: #dd4b39;
+  color: #fff;
+  .heading {
+    font-size: 6em;
+    font-weight: 300;
+    padding-top: 60px;
+  }
+  p {
+    font-size: 3em;
+    font-weight: 300;
+    padding-top: 50px;
+  }
+  .close-btn {
+    display: block;
+    padding: 20px;
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    line-height: 10.8em;
+    bottom: 10%;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    background: rgba(0,0,0,0.6);
+    border-radius: 50%;
+    transform: scale(0.8);
+    transition: transform 0.3s linear, background 0.2s linear;
+    &:hover {
+      background: rgba(0,0,0,0.8);
+      transform: scale(1.0);
+    }
+    i {
+      font-size: 6em;
+    }
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.1) translateY(-200%);
+    opacity: 0.1;
+  }
+  to {
+    transform: scale(1.0) translateY(0%);
+    opacity: 1.0;
+  }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+//  mobile
+  .win-screen {
+    .heading {
+      font-size: 3em;
+    }
+    p {
+      font-size: 2em;
+    }
+  }
+}
+//@media only screen and (min-width: 768px) and (max-width: 991px) {
+//  @content;
+//}
+//@media only screen and (min-width: 769px) and (max-width: 991px) {
+//  @content;
+//}
+//@media only screen and (min-width: 992px) and (max-width: 1229px) {
+//  @content;
+//}
+//@media only screen and (min-width: 1230px) {
+//  @content;
+//}
+//@media only screen and (min-width: 320px) and (max-width: 490px) {
+//  @content;
+//}
+//@media only screen and (min-width: 490px) and (max-width: 540px) {
+//  @content;
+//}
+//@media only screen and (min-width: 541px) and (max-width: 640px) {
+//  @content;
+//}
+//@media only screen and (min-width: 480px) and (max-width: 736px) {
+//  @content;
+//}

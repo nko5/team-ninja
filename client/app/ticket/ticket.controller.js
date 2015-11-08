@@ -12,6 +12,10 @@ angular.module('teamNinjaApp')
             self.selected[item] = !self.selected[item];
         };
 
+        self.closeWinMessage = function () {
+            self.wonGame = !self.wonGame;
+        };
+
         var timer;
         var join = function () {
             SocketIO.send(AppConstants.Events.JOIN, {gameId: $stateParams.id});
@@ -37,9 +41,10 @@ angular.module('teamNinjaApp')
                         self.started = true;
                     }
                 }, {
-                    name: AppConstants.Events.REWARD,
+                    name: AppConstants.Events.CLAIM_RESULT,
                     callback: function (data) {
-                        self.reward.won = true;
+                        self.wonGame = data.won;
+                        self.reward.won = data.won;
                         self.reward.rules = data.rule;
                     }
                 }]);

@@ -46,4 +46,16 @@
             </form>
         </div>
     </div>
+
+    <div class="win-screen" data-ng-if="ctrl.wonGame">
+        <div class="heading">Congratulations, you won!</div>
+
+        <p>
+            You have claimed the prize for {{ctrl.reward.rules.name}}. Well done!
+        </p>
+
+        <a class="close-btn" href="#" data-ng-click="ctrl.closeWinMessage()">
+            <i class="fa fa-times"></i>
+        </a>
+    </div>
 </div>

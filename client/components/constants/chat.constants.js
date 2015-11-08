@@ -9,6 +9,6 @@ angular.module('teamNinjaApp')
             LEAVE: "LEAVE",
             ACKNOWLEDGE: "ACKNOWLEDGE",
             START: "START",
-            REWARD: "REWARD"
+            CLAIM_RESULT: "CLAIM_RESULT"
         }
     });
