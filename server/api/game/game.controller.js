@@ -168,22 +168,19 @@ exports.addPlayer = function (req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            else {
-                Game.update(
-                    {_id: req.body.gameId},
-                    {$addToSet: {players: player}}, function (err, game) {
-                        if (err) {
-                            return res.json({
-                                updated: false
-                            });
-                        }
-                        else {
-                            return res.json({
-                                updated: true
-                            });
-                        }
-                    });
+            game.players.push(player);
+            for (var i = 0; i < game.tickets.length; i++) {
+                var ticket = game.tickets[i];
+                if (!ticket.userId) {
+                    ticket.userId = player.id;
+                }
             }
+            game.save(function (err, game) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                res.json({updated: true});
+            });
         });
     }
 };
@@ -203,8 +200,14 @@ exports.generateBoard = function (callback) {
     tasks.push(function (oCB) {
         var k = 0;
         async.whilst(
-            function () { return k < (batchCount * rowsPerTicket); },
-            function (cb) { blanks[k] = 0; k++; cb(); },
+            function () {
+                return k < (batchCount * rowsPerTicket);
+            },
+            function (cb) {
+                blanks[k] = 0;
+                k++;
+                cb();
+            },
             function () {
                 oCB();
             }
@@ -214,21 +217,23 @@ exports.generateBoard = function (callback) {
     tasks.push(function (oCB) {
         var v = {i: 1};
         async.whilst(
-            function() { return v.i < maxValue; },
-            function(cb) {
-                findRow(v, board, batchCount, rowsPerTicket, blanks, function() {
+            function () {
+                return v.i < maxValue;
+            },
+            function (cb) {
+                findRow(v, board, batchCount, rowsPerTicket, blanks, function () {
                     v.i++;
                     cb();
                 }, 0);
             },
-            function() {
+            function () {
                 oCB(null, board);
             }
         );
     });
 
     async.series(tasks, function (err, resp) {
-        if(err) {
+        if (err) {
             console.log("Error generating board", err);
             return callback([]);
         }
@@ -238,8 +243,10 @@ exports.generateBoard = function (callback) {
             counter = 0;
 
         async.whilst(
-            function() { return x < 6; },
-            function(cb) {
+            function () {
+                return x < 6;
+            },
+            function (cb) {
                 tickets.push({
                     tickets: board.slice(counter, counter + 3),
                     status: "UNUSED"
@@ -248,7 +255,7 @@ exports.generateBoard = function (callback) {
                 counter += 3;
                 cb();
             },
-            function() {
+            function () {
                 return callback(tickets);
             }
         );
@@ -259,22 +266,22 @@ function findRow(v, board, batchCount, rowsPerTicket, blanks, cb, iter) {
     var modulus = Math.floor(Math.random() * (batchCount * rowsPerTicket));
     var column = Math.floor(v.i / 10);
 
-    if(!(board[modulus] && board[modulus].length)) {
+    if (!(board[modulus] && board[modulus].length)) {
         board[modulus] = [];
         board[modulus].length = (batchCount * rowsPerTicket);
     }
 
-    if(typeof board[modulus][column] !== "undefined") {
+    if (typeof board[modulus][column] !== "undefined") {
         setImmediate(function () {
-            if(iter >= 500) {
+            if (iter >= 500) {
                 console.log(v.i);
                 v.i++;
             }
             return findRow(v, board, batchCount, rowsPerTicket, blanks, cb, ++iter);
         });
-    } else if(blanks[modulus] > 4) {
+    } else if (blanks[modulus] > 4) {
         setImmediate(function () {
-            if(iter >= 500) {
+            if (iter >= 500) {
                 console.log(v.i);
                 v.i++;
             }
