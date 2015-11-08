@@ -163,3 +163,17 @@ exports.addPlayer = function (req, res) {
     });
   }
 };
+
+exports.generateBoard = function () {
+    var board = [];
+    for(var i = 0; i < 27; i++) {
+        var num = Math.round(Math.random() * 100),
+            modulus = Math.round(Math.random() * 10);
+        if(num % modulus === 0) {
+            board.push("");
+        } else {
+            board.push(num);
+        }
+    }
+    return board;
+};

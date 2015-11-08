@@ -6,7 +6,12 @@
     </div>
 
     <div class="ticket-container">
-
+        <div class="ticket">
+            <a href="#" class="num-section pull-left"
+               data-ng-class="{disabled: $index === 3}"
+               data-ng-repeat="section in ctrl.sections track by $index">
+            </a>
+        </div>
     </div>
 
     <div class="footer ticket-footer">

@@ -5,6 +5,8 @@ angular.module('teamNinjaApp')
         var self = this;
 
         self.currentUser = Auth.getCurrentUser();
+        self.sections = [];
+        self.sections.length = 24;
 
         self.currentUser && self.currentUser.$promise.then(function (user) {
             self.userObj = {

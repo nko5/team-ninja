@@ -67,8 +67,8 @@ angular.module('teamNinjaApp')
 
             if(userToUpdate) {
                 userToUpdate.message = data.message;
-                $timeout(function(){
-                    if(data.message == userToUpdate.message){
+                $timeout(function () {
+                    if (data.message == userToUpdate.message) {
                         userToUpdate.message = "";
                     }
                     userToUpdate.message = "";
@@ -87,8 +87,8 @@ angular.module('teamNinjaApp')
 
             if(userToUpdate) {
                 userToUpdate.message = data.rule.name;
-                $timeout(function(){
-                    if(data.rule.name == userToUpdate.message){
+                $timeout(function () {
+                    if (data.rule.name == userToUpdate.message) {
                         userToUpdate.message = "";
                     }
                 }, 2000);
