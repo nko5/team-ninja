@@ -4,9 +4,15 @@
     <div class="lives">
         <p class="mobileNone">Health</p>
 
-        <div class="heart"><i class="fa fa-heart"></i></div>
-        <div class="heart"><i class="fa fa-heart"></i></div>
-        <div class="heart"><i class="fa fa-heart-o"></i></div>
+        <div class="heart">
+            <i class="fa" data-ng-class="{'fa-heart': ctrl.health >= 1,'fa-heart-o': ctrl.health < 1}"></i>
+        </div>
+        <div class="heart">
+            <i class="fa" data-ng-class="{'fa-heart': ctrl.health >= 2,'fa-heart-o': ctrl.health < 2}"></i>
+        </div>
+        <div class="heart">
+            <i class="fa" data-ng-class="{'fa-heart': ctrl.health == 3,'fa-heart-o': ctrl.health <3}"></i>
+        </div>
     </div>
 
     <div class="ticket-container">
@@ -29,8 +35,8 @@
             <div class="claims-list">
                 <a href="javascript:void(0)" class="claim-btn" data-toggle="dropdown">Claim</a>
                 <ul class="bootstrap-dropdown">
-                    <li data-ng-repeat="rule in ctrl.game.rules" data-ng-click="ctrl.fireClaim(rule)">
-                        <a href="javascript:void(0)"> {{rule.name}} </a>
+                    <li data-ng-repeat="rule in ctrl.game.rules"  >
+                        <a href="javascript:void(0)" data-ng-click="ctrl.fireClaim(rule)" data-ng-class="{disabled:rule.disabled}"> {{rule.name}} </a>
                     </li>
                 </ul>
             </div>
@@ -55,6 +61,20 @@
         </p>
 
         <a class="close-btn" href="#" data-ng-click="ctrl.closeWinMessage()">
+            <i class="fa fa-times"></i>
+        </a>
+    </div>
+
+    <div class="loose-screen" data-ng-if="ctrl.showGameOver">
+        <div class="heading">Oops!</div>
+
+        <p>
+            You used all your lives by bogus claims! Do come back for a new one.
+            <br/>
+            But you can still chat and enjoy the game
+        </p>
+
+        <a class="close-btn" href="#" data-ng-click="ctrl.showGameOver = false;">
             <i class="fa fa-times"></i>
         </a>
     </div>

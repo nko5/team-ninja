@@ -6,6 +6,7 @@
 
 var config = require('./environment');
 var Game = require('../api/game/game.model');
+var GameService = require('../api/game/game.service');
 var User = require('../api/user/user.model');
 var socketioJwt = require('socketio-jwt');
 var Constants = require("../components/constants");
@@ -29,7 +30,7 @@ module.exports = function (socketio) {
         socket.on(Constants.Events.JOIN, function (data) {
             Game.findById(data.gameId, function (err, game) {
                 if (game && game.hasPlayer(currentUser)) {
-                    if(!socket.gameId){
+                    if (!socket.gameId) {
                         socket.gameId = data.gameId;
                         socket.join(data.gameId);
                         socket.join(currentUser._id);
@@ -60,6 +61,15 @@ module.exports = function (socketio) {
             }
         });
 
+        socket.on(Constants.Events.CLAIM_RESULT, function (data) {
+            console.log("asasas >>>>>>>>>>>>>>>>>>>>>>>>>",currentUser);
+            if (socket.gameId) {
+                socket.broadcast.to(data.userId).emit(Constants.Events.CLAIM_RESULT, {
+                    ack: true
+                });
+            }
+        });
+
         socket.on(Constants.Events.REWARD, function (data) {
             if (socket.gameId) {
                 socket.broadcast.to(data.userId).emit(Constants.Events.REWARD, data);
@@ -76,8 +86,14 @@ module.exports = function (socketio) {
 
         socket.on(Constants.Events.CLAIM, function (data) {
             if (socket.gameId) {
-                console.log("Received Claim from",data);
-                socket.broadcast.to(socket.gameId).emit(Constants.Events.CLAIM, {
+                data.user = currentUser;
+                GameService.claim(data, function (result) {
+                    result.user = currentUser;
+                    socket.to(socket.gameId).emit(Constants.Events.CLAIM_RESULT, result);
+                    socket.emit(Constants.Events.CLAIM_RESULT, result);
+                });
+
+                socket.to(socket.gameId).emit(Constants.Events.CLAIM, {
                     source: currentUser,
                     rule: data.rule
                 });

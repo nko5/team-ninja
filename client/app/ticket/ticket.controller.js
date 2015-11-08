@@ -8,6 +8,9 @@ angular.module('teamNinjaApp')
         self.started = false;
         self.selected = {};
         self.reward = {};
+        self.health = 3;
+        self.gameOver = false;
+        self.showGameOver = false;
         self.toggle = function (item) {
             self.selected[item] = !self.selected[item];
         };
@@ -15,6 +18,14 @@ angular.module('teamNinjaApp')
         self.closeWinMessage = function () {
             self.wonGame = false;
         };
+
+        self.disableRule = function (identifier) {
+            self.game.rules.forEach(function (rule) {
+                if (rule.identifier == identifier) {
+                    rule.disabled = true
+                }
+            })
+        }
 
         var timer;
         var join = function () {
@@ -30,6 +41,23 @@ angular.module('teamNinjaApp')
         Auth.isLoggedInAsync(function (isLoggedIn) {
             if (isLoggedIn) {
                 SocketIO.bindAll([{
+                    name: AppConstants.Events.CLAIM_RESULT,
+                    callback: function (data) {
+                        if (data.user._id == Auth.getCurrentUser()._id) {
+                            self.wonGame = data.won;
+                            if(data.won == false){
+                                self.health--;
+                                if(self.health <= 0){
+                                    self.gameOver = true;
+                                    self.showGameOver = true;
+                                }
+                            }
+                        }
+                        if (data.won) {
+                            self.disableRule(data.rule.identifier);
+                        }
+                    }
+                }, {
                     name: AppConstants.Events.ACKNOWLEDGE,
                     callback: function () {
                         self.connected = true;
@@ -39,13 +67,6 @@ angular.module('teamNinjaApp')
                     name: AppConstants.Events.START,
                     callback: function () {
                         self.started = true;
-                    }
-                }, {
-                    name: AppConstants.Events.CLAIM_RESULT,
-                    callback: function (data) {
-                        self.wonGame = data.won;
-                        self.reward.won = data.won;
-                        self.reward.rules = data.rule;
                     }
                 }]);
                 join();
@@ -60,6 +81,8 @@ angular.module('teamNinjaApp')
                 var ticket = self.game.tickets[i];
                 if (ticket.userId == Auth.getCurrentUser()._id) {
                     self.ticket = ticket;
+                    self.health = ticket.health;
+                    self.gameOver = ticket.health > 0 ? false: true;
                     break;
                 }
             }
@@ -77,12 +100,9 @@ angular.module('teamNinjaApp')
 
         self.fireClaim = function (rule) {
             var selected = getSelected();
-            GameApi.claim({_id: $stateParams.id, rule: rule, selected: selected}, function (data) {
-                console.log(data);
-            }, function () {
-
-            });
-            SocketIO.send(AppConstants.Events.CLAIM, {rule: rule, gameId: $stateParams.id, selected: selected});
+            if (!rule.disabled && self.gameOver == false) {
+                SocketIO.send(AppConstants.Events.CLAIM, {rule: rule, gameId: $stateParams.id, selected: selected});
+            }
         };
 
         self.sendChat = function () {
