@@ -3,6 +3,8 @@
 angular.module('teamNinjaApp')
     .controller('TicketCtrl', function (GameApi, AppConstants, SocketIO, Auth, $scope, $stateParams, $state) {
         var self = this;
+        self.sections = [];
+        self.sections.length = 24;
 
         Auth.isLoggedInAsync(function (isLoggedIn) {
             if (isLoggedIn) {
