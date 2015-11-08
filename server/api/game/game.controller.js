@@ -101,7 +101,7 @@ exports.create = function (req, res) {
                 players: [user],
                 tickets: board.tickets.map(function (ticket) {
                     return {
-                        board:ticket,
+                        board: ticket,
                         status: false
                     }
                 }),
@@ -169,21 +169,38 @@ function handleError(res, err) {
 // Add player to a game
 exports.addPlayer = function (req, res) {
     var player = {
-        id: req.body._id,
-        name: req.body.name,
-        picture: req.body.picture
+        id: req.user._id,
+        name: req.user.name,
+        picture: req.user.picture
     };
     if (req.body.gameId) {
         Game.findById(req.body.gameId, function (err, game) {
             if (err) {
                 return handleError(res, err);
             }
-            game.players.push(player);
+            var alreadyAdded = false;
+            for (var i = 0; i < game.players.length; i++) {
+                if (game.players.id.toString() == player.id) {
+                    alreadyAdded = true;
+                    break
+                }
+            }
+            if (alreadyAdded) {
+                game.players.push(player);
+            }
+            var freeTicket;
+            var ownedTicket = null;
             for (var i = 0; i < game.tickets.length; i++) {
                 var ticket = game.tickets[i];
                 if (!ticket.userId) {
-                    ticket.userId = player.id;
+                    freeTicket = ticket;
                 }
+                if (ticket.userId && ticket.userId.toString() == player.id) {
+                    ownedTicket = ticket;
+                }
+            }
+            if (!ownedTicket) {
+                freeTicket.userId = player.id;
             }
             game.save(function (err, game) {
                 if (err) {
