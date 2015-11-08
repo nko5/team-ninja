@@ -29,7 +29,10 @@ $btnGithubBackgroundHighlight:      #ccc;
   }
   .social-login {
     padding-top: 20vh;
-    a {
+    .logo-img {
+      width: 75px;
+    }
+    a.btn {
       display: inline-block;
       width: 100px;
       margin: 10px;

@@ -1,0 +1,45 @@
+.join-section {
+  .text-label {
+    font-family: "Roboto Slab", serif;
+    color: #555;
+    font-weight: 300;
+    font-size: 1.3em;
+    &.large {
+      font-size: 2.5em;
+      padding: 5px 10px;
+      color: #333;
+      margin: 10px 0;
+      border-bottom: 1px solid #ddd;
+      font-weight: 300;
+    }
+  }
+  .hkv-textbox {
+    width: 80%;
+    margin: 0 auto;
+    font-size: 2em;
+    font-weight: 300;
+    font-family: "Roboto Slab", serif;
+    padding: 15px;
+    height: auto;
+  }
+  .hkv-btn {
+    padding: 10px 20px;
+    margin-top: 15px;
+    background-color: #fff;
+    color: #dd4b39;
+    font-weight: 400;
+    border-radius: 5px;
+    border: 2px solid #dd4b39;
+    font-family: "Roboto Slab", serif;
+    font-size: 1.7em;
+    transition: background 0.3s linear, transform 0.3s linear, box-shadow 0.4s linear, color 0.3s linear;
+    transform: scale(0.9);
+    box-shadow: 0;
+    &:hover {
+      background-color: #dd4b39;
+      transform: scale(1.0);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+      color: #fff;
+    }
+  }
+}

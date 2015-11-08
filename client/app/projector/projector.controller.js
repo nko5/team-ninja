@@ -74,7 +74,7 @@ angular.module('teamNinjaApp')
         var showMessage = function (data) {
             var user = findUser(data.source._id);
             if (user) {
-                displayMessage(user.obj, data.message, 2000);
+                displayMessage(user.obj, data.message, 3000);
             }
         };
         var disablePrize = function (data) {
