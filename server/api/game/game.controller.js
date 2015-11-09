@@ -183,6 +183,9 @@ exports.addPlayer = function (req, res) {
             if (err) {
                 return handleError(res, err);
             }
+            if(!game){
+                return res.status(404).send('Not Found');
+            }
             var alreadyAdded = false;
             for (var i = 0; i < game.players.length; i++) {
                 if (game.players.id.toString() == player.id) {
